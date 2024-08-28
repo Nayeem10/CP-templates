@@ -43,6 +43,59 @@ namespace Hashing {           // everything is in long long
     PLL substringHash(const vector<PLL> &hashlist, int l, int r) {
         return (hashlist[r]+(M-hashlist[l-1])*pb[r-l+1])%M;
     }
+
+        PLL append(PLL cur, char c) {
+        return (cur*base + c)%M;
+    }
+ 
+    ///prepends c to string with size k
+    PLL prepend(PLL cur, int k, char c) {
+        return (pb[k]*c + cur)%M;
+    }
+ 
+    ///replaces the i-th (0-indexed) character from right from a to b;
+    PLL replace(PLL cur, int i, char a, char b) {
+        return (cur + pb[i] * (M+b-a)%M)%M;
+    }
+ 
+    ///Erases c from front of the string with size len
+    PLL pop_front(PLL hash, int len, char c) {
+        return (hash + pb[len-1]*(M-c))%M;
+    }
+ 
+    ///concatenates two strings where length of the right is k
+    PLL concat(PLL left, PLL right, int k) {
+        return (left*pb[k] + right)%M;
+    }
+ 
+    PLL power (const PLL& a, LL p) {
+        if (p==0)   return {1,1};
+        PLL ans = power(a, p/2);
+        ans = (ans * ans)%M;
+        if (p%2)    ans = (ans*a)%M;
+        return ans;
+    }
+ 
+    PLL inverse(PLL a)  {
+        if (M.ss == 1)  return power(a, M.ff-2);
+        return power(a, (M.ff-1)*(M.ss-1)-1);
+    }
+ 
+    ///Erases c from the back of the string
+    PLL invb = inverse(base);
+    PLL pop_back(PLL hash, char c) {
+        return ((hash-c+M)*invb)%M;
+    }
+ 
+    ///Calculates hash of string with size len repeated cnt times
+    ///This is O(log n). For O(1), pre-calculate inverses
+    PLL repeat(PLL hash, int len, LL cnt) {
+        PLL mul = ((pb[len*cnt]-1+M) * inverse(pb[len]-1+M))%M;
+        PLL ans = (hash*mul);
+        if (pb[len].ff == 1)    ans.ff = hash.ff*cnt;
+        if (pb[len].ss == 1)    ans.ss = hash.ss*cnt;
+        return ans%M;
+    }
  
 }
 using namespace Hashing;
