@@ -5,42 +5,6 @@ using namespace std;
 
 const int N = 1e5;
 
-LL n;
-std::vector<int> lazy(4 * N), segTree(4 * N);
-void pushdown(LL node, LL val) {
-  lazy[node*2] = val;
-  lazy[node*2+1] = val;
-}
-void apply(LL node, LL curLeft, LL curRight) {
-  if(lazy[node] != -1) {
-    segTree[node] = lazy[node] * (curRight - curLeft + 1);
-    if(curLeft != curRight) pushdown(node, lazy[node]);
-    lazy[node] = -1;
-  }
-}
-void updateRange(LL node, LL curLeft, LL curRight, LL l, LL r, LL val) {
-  apply(node, curLeft, curRight);
-  if(curLeft > curRight or curLeft > r or curRight < l) return;
-  if(curLeft >= l and curRight <= r) {
-    segTree[node] = val * (curRight - curLeft + 1);
-    if(curLeft != curRight) pushdown(node, val);
-    return;
-  }
-  LL mid = (curLeft + curRight) / 2;
-  updateRange(node*2, curLeft, mid, l, r, val);        
-  updateRange(node*2 + 1, mid + 1, curRight, l, r, val);   
-  segTree[node] = segTree[node*2] + segTree[node*2+1];        
-}
-
-LL queryRange(LL node, LL curLeft, LL curRight, LL l, LL r) {
-  if(curLeft > curRight or curLeft > r or curRight < l) return 0;
-  apply(node, curLeft, curRight);
-  if(curLeft >= l and curRight <= r) return segTree[node];
-  LL mid = (curLeft + curRight) / 2;
-  LL sumL = queryRange(node*2, curLeft, mid, l, r);         
-  LL sumR = queryRange(node*2 + 1, mid + 1, curRight, l, r); 
-  return (sumL + sumR);
-}
 
 void solve(){
     cin>>n;

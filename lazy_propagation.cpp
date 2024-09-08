@@ -32,7 +32,7 @@ struct Tree {
     Tree(int x, Tree* left, Tree* right) : val(x), lazy(0), left(left), right(right) {}
 };
 
-class segmentTree{
+class LazySegmentTree{
     Tree *root;
     int n;
 
@@ -56,9 +56,9 @@ class segmentTree{
     }
 
 
-    Tree* build(int le, int ri,int a[]){
+    Tree* build(int le, int ri){
         if(le==ri){
-            Tree* node = new Tree(a[le]);
+            Tree* node = new Tree();
             return node;
         }
 
@@ -70,8 +70,8 @@ class segmentTree{
         merge(node);
         */
                                             
-        Tree* left = build(le, le+ri >>1, a);
-        Tree* right = build((le+ri >>1) + 1, ri, a);
+        Tree* left = build(le, le+ri >>1);
+        Tree* right = build((le+ri >>1) + 1, ri);
 
         return new Tree(merge(left,right),left,right);
     }
@@ -109,9 +109,9 @@ class segmentTree{
 
 
     public:
-    segmentTree(int a[],int m){
+    LazySegmentTree(int m){
         n = m;
-        root = build(0,n-1,a);
+        root = build(0,n-1);
     }
     void update(int l,int r,int val){
         update(root,0,n-1,l,r,val);
@@ -128,7 +128,7 @@ void solve(){
     for(int i=0;i<n;i++){
         cin>>a[i];
     }
-    segmentTree tree(a,n);
+    LazySegmentTree tree(a,n);
     while(q--){
         int c;
         cin>>c;

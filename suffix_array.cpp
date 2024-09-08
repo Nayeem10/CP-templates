@@ -56,7 +56,7 @@ vector <int> suffixArray (const vector <int> &vec, int val_range) {
 
 vector <int> getSuffixArray (const string &s, const int LIM = 128) {
   vector <int> vec(s.size() + 1);
-  copy(begin(s), end(s), begin(vec)); vec.back() = '$';
+  copy(begin(s), end(s), begin(vec)); vec.back() = '#';
   auto ret = suffixArray(vec, LIM);
   ret.erase(ret.begin()); return ret;
 }
