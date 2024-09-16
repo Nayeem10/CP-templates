@@ -1,6 +1,3 @@
-#define LL long long 
-#define PLL pair<long long,long long>
-
 namespace Hashing {           // everything is in long long
     #define ff first
     #define ss second

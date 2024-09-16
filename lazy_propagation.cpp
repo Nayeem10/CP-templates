@@ -1,125 +1,85 @@
 #include<bits/stdc++.h>
-
 using namespace std;
 
-typedef long long ll;
-typedef unsigned long long ull;
+class LazySegmentTree {
+    vector<int> tree;  
+    vector<int> lazy; 
+    int n, I;
 
-#define int long long
-#define yes cout << "YES" << endl ;
-#define no  cout << "NO" << endl ;
-#define ln '\n'
-#define faster {ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);}
-
-const ll mod=998244353;
-const int N=2.5e5+10;
-
-inline void debugMode() {
-    #ifndef ONLINE_JUDGE
-    freopen("input.txt", "r", stdin);
-    freopen("output.txt", "w", stdout);
-    #endif // ONLINE_JUDGE
-}
-
-struct Tree {
-    int val;
-    int lazy;  
-    Tree* left;
-    Tree* right;
-
-    Tree() : val(0), lazy(0), left(nullptr), right(nullptr) {}
-    Tree(int x) : val(x), lazy(0), left(nullptr), right(nullptr) {}
-    Tree(int x, Tree* left, Tree* right) : val(x), lazy(0), left(left), right(right) {}
-};
-
-class LazySegmentTree{
-    Tree *root;
-    int n;
-
-    void merge(Tree* node){
-        node->val = node->left->val + node->right->val;
+    void merge(int a, int b) {
+        return a + b;
     }
 
-    int merge(Tree* left, Tree* right){
-        return left->val + right->val;
-    }
-
-    void propagate(Tree* node,int le,int ri){
-        if(node->lazy){
-            node->val += (ri-le+1) * node->lazy;
-            if(le != ri){
-                node->left->lazy += node->lazy;
-                node->right->lazy += node->lazy; 
+    void propagate(int node, int le, int ri) {
+        if (lazy[node] != 0) {
+            tree[node] += (ri - le + 1) * lazy[node]; 
+            if (le != ri) { 
+                lazy[2 * node + 1] += lazy[node];  
+                lazy[2 * node + 2] += lazy[node]; 
             }
-            node->lazy = 0;
+            lazy[node] = 0; 
         }
     }
 
-
-    Tree* build(int le, int ri){
-        if(le==ri){
-            Tree* node = new Tree();
-            return node;
-        }
-
-        /*
-        Tree* node=new Tree();              
-        int mid=(le+ri)/2;
-        node->left = build(le,mid,a);
-        node->right = build(mid+1,ri,a);
-        merge(node);
-        */
-                                            
-        Tree* left = build(le, le+ri >>1);
-        Tree* right = build((le+ri >>1) + 1, ri);
-
-        return new Tree(merge(left,right),left,right);
-    }
-
-    void update(Tree* node, int le,int ri,int l,int r,int val){
-        propagate(node,le,ri);
-        if(r<le || l>ri){
+    void build(int node, int le, int ri, vector<int> &arr) {
+        if (le == ri) {
+            tree[node] = arr[le]; 
             return;
         }
-        if(le>=l && ri<=r){
-            node->val += (ri-le+1)*val;
-            if(le!=ri){
-                node->left->lazy += val;
-                node->right->lazy += val;
+        int mid = (le + ri) / 2;
+        build(2 * node + 1, le, mid, arr); 
+        build(2 * node + 2, mid + 1, ri, arr);
+        tree[node] = merge(tree[2 * node + 1] , tree[2 * node + 2]);
+    }
+
+    void update(int node, int le, int ri, int l, int r, int val) {
+        propagate(node, le, ri); 
+        if (r < le || l > ri) { 
+            return;
+        }
+        if (le >= l && ri <= r) { 
+            tree[node] += (ri - le + 1) * val;
+            if (le != ri) {
+                lazy[2 * node + 1] += val;  
+                lazy[2 * node + 2] += val; 
             }
             return;
         }
-        int mid = le+ri >> 1;
-        update(node->left,le,mid,l,r,val);
-        update(node->right,mid+1,ri,l,r,val);
-        merge(node);
+        int mid = (le + ri) / 2;
+        update(2 * node + 1, le, mid, l, r, val);      
+        update(2 * node + 2, mid + 1, ri, l, r, val); 
+        tree[node] = merge(tree[2 * node + 1] , tree[2 * node + 2]);
     }
 
-    int query(Tree* node,int le,int ri,int l,int r){
-        propagate(node,le,ri);
-        if(l<=le && r>=ri){
-            return node->val;
+    int query(int node, int le, int ri, int l, int r) {
+        propagate(node, le, ri); 
+        if (l <= le && r >= ri) {
+            return tree[node];
         }
-        if(r<le || l>ri){
-            return 0; 
+        if (r < le || l > ri) {
+            return I;
         }
-        int mid = le+ri >> 1;
-        return query(node->left,le,mid,l,r) + query(node->right,mid+1,ri,l,r);
+        int mid = (le + ri) / 2;
+        return merge(query(2 * node + 1, le, mid, l, r) , query(2 * node + 2, mid + 1, ri, l, r));
     }
 
+public:
+    LazySegmentTree(vector<int> &arr, int _I) {
+        n = arr.size(); I = _I;
+        tree.resize(4 * n, 0);
+        lazy.resize(4 * n, 0);
+        build(0, 0, n - 1, arr); 
+    }
 
-    public:
-    LazySegmentTree(int m){
-        n = m;
-        root = build(0,n-1);
+    void update(int l, int r, int val) {
+        update(0, 0, n - 1, l, r, val);
     }
-    void update(int l,int r,int val){
-        update(root,0,n-1,l,r,val);
-    }
-    int query(int l,int r){
-        return query(root,0,n-1,l,r);
+
+    int query(int l, int r) {
+        return query(0, 0, n - 1, l, r);
     }
 };
+
 
 void solve(){
     int n,q;
