@@ -41,7 +41,7 @@ namespace Hashing {           // everything is in long long
         return (hashlist[r]+(M-hashlist[l-1])*pb[r-l+1])%M;
     }
 
-        PLL append(PLL cur, char c) {
+    PLL append(PLL cur, char c) {
         return (cur*base + c)%M;
     }
  

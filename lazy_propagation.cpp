@@ -6,7 +6,7 @@ class LazySegmentTree {
     vector<int> lazy; 
     int n, I;
 
-    void merge(int a, int b) {
+    int merge(int a, int b) {
         return a + b;
     }
 
@@ -64,8 +64,8 @@ class LazySegmentTree {
     }
 
 public:
-    LazySegmentTree(vector<int> &arr, int _I) {
-        n = arr.size(); I = _I;
+    LazySegmentTree(vector<int> &arr, int I) {
+        n = arr.size(); this->I = I;
         tree.resize(4 * n, 0);
         lazy.resize(4 * n, 0);
         build(0, 0, n - 1, arr); 
