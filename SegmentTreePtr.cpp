@@ -1,25 +1,3 @@
-#include<bits/stdc++.h>
-
-using namespace std;
-
-typedef long long ll;
-typedef unsigned long long ull;
-
-#define int long long
-#define yes cout << "YES" << endl ;
-#define no  cout << "NO" << endl ;
-#define ln '\n'
-#define faster {ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);}
-
-const ll mod=998244353;
-const int N=2.5e5+10;
-
-inline void debugMode() {
-    #ifndef ONLINE_JUDGE
-    freopen("input.txt", "r", stdin);
-    freopen("output.txt", "w", stdout);
-    #endif // ONLINE_JUDGE
-}
 struct Tree {
     int val;
     Tree* left;
@@ -91,38 +69,3 @@ class segmentTree{
         return query(root,0,n-1,l,r);
     }
 };
-
-void solve(){
-    int n,q;
-    cin>>n>>q;
-    int a[n];
-    for(int i=0;i<n;i++){
-        cin>>a[i];
-    }
-    segmentTree tree(a,n);
-    while(q--){
-        int c;
-        cin>>c;
-        if(c==1){
-            int k,val;
-            cin>>k>>val;
-            tree.update(k-1,val);
-        }else{
-            int l,r;
-            cin>>l>>r;
-            cout<<tree.query(l-1,r-1)<<endl;
-        }
-    }
-}
-
-signed main(){
-    faster
-    debugMode();
-    int t=1;
-    //cin>>t;
-    for(int cs=1;cs<=t;cs++){
-        //cout<<"Case "<<cs<<": ";
-        solve();
-    }
-    return 0;
-}

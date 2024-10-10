@@ -17,7 +17,7 @@ namespace Hashing {           // everything is in long long
     }
     PLL pb[N];     
     void hashPre() {
-        pb[0] = {1,1};
+        pb[0] = {1, 1};
         for (int i=1; i<N; i++)     pb[i] = (pb[i-1] * base)%M;
     }
     

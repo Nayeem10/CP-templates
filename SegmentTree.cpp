@@ -77,50 +77,6 @@ class segmentTree{
     }
 };
 
-int fun1(int a,int b){
+int fun(int a,int b){
     return max(a,b);
-}
-int fun2(int a,int b){
-    return min(a,b);
-}
-
-
-void compressarray(){
-    int n,q;
-    cin>>n;
-    int a[n],b[n];
-
-    for(int i=0;i<n;i++){
-        cin>>a[i];
-        b[i] = a[i];
-    }
-    sort(b,b+n);
-    int l[n], r[n];
-    vector<int> v(n,0);
-    segmentTree treel(v,fun1,-1e9),treer(v,fun1,-1e9);
-    
-    //calculating maximum increasing subsequence from 0 to i (if i is included)
-    for(int i=0;i<n;i++){
-        int pos = lower_bound(b,b+n,a[i])-b;
-        int val = (treel.query(0,pos-1));
-        l[i] = val;
-        treel.update(pos,val+1);
-    }
-
-    //calculating maximum increasing subsequence from n-1 to i (if i is included)
-    for(int i=n-1;i>=0;i--){
-        int pos = lower_bound(b,b+n,a[i])-b;
-        int val = (treer.query(0,pos-1));
-        r[i] = val;
-        treer.update(pos,val+1);
-    }
-    
-    int ans = -1;
-    
-    for(int i=0;i<n;i++){
-        if(l[i] && r[i]){
-            ans = max(ans,l[i]+r[i]+1);
-        }
-    }
-    cout<<ans<<'\n';
 }

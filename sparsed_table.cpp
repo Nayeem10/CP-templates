@@ -1,40 +1,45 @@
-#include<bits/stdc++.h>
-using namespace std;
+class SparseTable {
+private:
+    vector<vector<int>> table;
+    vector<int> log;
+    int n;
 
-#define ln '\n'
+public:
+    SparseTable(const vector<int>& arr) {
+        n = arr.size();
+        log.resize(n + 1);
+        buildLog();
+        table = vector<vector<int>>(n, vector<int>(log[n] + 1));
 
-//#define log_2(n) (31 - __builtin_clz(n))
-#define log_2(n) 63-__builtin_clzll(n)
- 
-const int N = (1 << 20) + 5 ; //1048576 + 5
-
-int logs[N];
-
-void computeLogs(){
-    logs[1] = 0;
-    for(int i = 2; i < (1 << 20); i++){
-        logs[i] = logs[i / 2]+1;
+        for (int i = 0; i < n; i++) {
+            table[i][0] = arr[i];
+        }
+        
+        for (int j = 1; (1 << j) <= n; j++) {
+            for (int i = 0; i + (1 << j) <= n; i++) {
+                table[i][j] = merge(table[i][j - 1], table[i + (1 << (j - 1))][j - 1]);
+            }
+        }
     }
-} 
-
-PLL fun(const PLL a,const PLL b){
-    return a.first>b.first?a:b; 
-}
- 
-PLL sparseTable[N][(LL)log_2(N) + 5];
-void build(LL n, vector<PLL> &v){
-  for(LL i = 0; i < n; i++) sparseTable[i][0] = v[i];
-  for(LL j = 1; (1 << j) <= n; j++) {
-    for(LL i = 0; (i + (1 << j) - 1) < n; i++) 
-      sparseTable[i][j] = fun(sparseTable[i][j - 1], sparseTable[i + (1 << (j - 1))][j - 1]);
-  }
-}
-PLL query(LL L, LL R){
-  LL j = logs[R - L + 1];
-  return fun(sparseTable[L][j], sparseTable[R - (1 << j) + 1][j]);
-}
-
-int main(){
-    int n; cin>>n;
-    cout<<lg(n)<<ln;
-}
+    int merge(int a, int b){
+        return max(a, b);
+    }
+    void buildLog() {
+        log[1] = 0;
+        for (int i = 2; i <= n; i++) {
+            log[i] = log[i / 2] + 1;
+        }
+    }
+    int Query(int L, int R) {
+        int j = log[R - L + 1];
+        return merge(table[L][j], table[R - (1 << j) + 1][j]);
+    }
+    int query(int L, int R) {
+        int sum = 0;
+        for (int j = log[R - L + 1]; L <= R; j = log[R - L + 1]) {
+            sum = merge(sum, table[L][j]);
+            L += (1 << j);
+        }
+        return sum;
+    }
+};

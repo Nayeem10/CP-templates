@@ -5,14 +5,14 @@ template<typename T>
 class KMP {
 public:
     vector<int> getLPSarray(T &b){
-        int m = b.size(), len = 0;
-        vector<int> lps(m);
-        for(int i = 1; i < m; i++){
-            while(len && b[i] != b[len]) len = lps[len - 1];
-            if(b[i] == b[len]) len++;
-            lps[i]=len;
+        int m = b.size();
+        vector<int> phi(m);
+        for(int i = 1, j = 0; i < m; i++){
+            while(j && b[i] != b[j]) j = phi[j - 1];
+            if(b[i] == b[j]) j++;
+            phi[i] = j;
         }
-        return lps;
+        return phi;
     }
 
     int match(T &a, T &b){
