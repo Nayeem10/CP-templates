@@ -1,10 +1,10 @@
-template<typename T>
+template<typename DT>
 class segmentTree{
-    T *seg, I;
+    DT *seg, I;
     int n;
-    T(*merge)(T, T);
+    DT(*merge)(DT, DT);
     
-    void build(int idx,int le, int ri,vector<T> &v){
+    void build(int idx,int le, int ri,vector<DT> &v){
         if(le == ri){
             seg[idx] = v[le];
             return;
@@ -15,7 +15,7 @@ class segmentTree{
         seg[idx] = merge (seg[2*idx+1], seg[2*idx+2]);
     }
 
-    void update(int idx, int le, int ri, int pos, T val){
+    void update(int idx, int le, int ri, int pos, DT val){
         if(le == ri){
             seg[idx] = val;
             return;
@@ -28,7 +28,7 @@ class segmentTree{
         seg[idx] = merge (seg[2*idx+1], seg[2*idx+2]);
     }
 
-    T query(int idx, int le, int ri, int l, int r){
+    DT query(int idx, int le, int ri, int l, int r){
         if(l <= le && r >= ri){
             return seg[idx];
         }
@@ -41,7 +41,7 @@ class segmentTree{
 
     //finding the leftmost appearence of value <= val in [l....r] range
     //need minimum segment tree
-    int walk(int idx, int le, int ri, int l, int r, T val){
+    int walk(int idx, int le, int ri, int l, int r, DT val){
         if(r < le || l > ri){
             return r; 
         }
@@ -59,20 +59,20 @@ class segmentTree{
     }
 
     public:
-    segmentTree(vector<T> &v, T(*fptr)(T, T), T _I){
+    segmentTree(vector<DT> &v, DT(*fptr)(DT, DT), DT _I){
         n = v.size(); I = _I;
         merge = fptr;
-        seg = new T [4*n];
+        seg = new DT [4*n];
         build(0, 0, n-1, v);
     }
     void update(int pos, int val){
         update(0, 0, n-1, pos, val);
     }
-    int walk(int l, int r, T val){
+    int walk(int l, int r, DT val){
         if(query (l,r) > val) return r;
         return walk (0, 0, n-1, l, r, val);
     }
-    T query(int l, int r){
+    DT query(int l, int r){
         return query(0, 0, n-1, l, r);
     }
 };

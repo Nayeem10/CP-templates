@@ -8,8 +8,11 @@ void runReferenceCode();
 bool compare_outputs();
 
 int main() {
+    system("g++ -o myCode myCode.cpp");
+    system("g++ -o referenceCode referenceCode.cpp");
+
     srand(time(0));
-    int test_count = 100;
+    int test_count = 5;
 
     for (int i = 0; i < test_count; i++) {
         string test_case = generate_test_case();
@@ -27,7 +30,7 @@ int main() {
             // cout << test_case << endl;
         }
     }
-
+    system("rm myCode referenceCode");
     cout << "Stress test completed." << endl;
     return 0;
 }

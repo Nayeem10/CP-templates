@@ -16,8 +16,6 @@ const LL mod = 1e9 + 7;
 const int N = 1e5 + 10;
 const LL inf = 1e18;
 
-
-
 struct Node {
     bool is_inc;
     int minV;

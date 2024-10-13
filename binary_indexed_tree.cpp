@@ -3,7 +3,7 @@ class BIT{
 public:
     BIT(int N): N(N){
         bin = new int[N + 1];
-        memset(bin, 0, sizeof(bin));
+        memset(bin, 0, (N + 1) * sizeof(int)); 
     }
     void update(int id, int val){
         for(; id <= N; id += id & -id)
