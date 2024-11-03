@@ -1,82 +1,82 @@
-#include <iostream>
-#include <vector>
-#include <map>
-#include <iterator>
-#include <set>
-#include <algorithm> 
-#include <numeric>
+/*
+⡆⣐⢕⢕⢕⢕⢕⢕⢕⢕⠅⢗⢕⢕⢕⢕⢕⢕⢕⠕⠕⢕⢕⢕⢕⢕⢕⢕⢕⢕
+⢐⢕⢕⢕⢕⢕⣕⢕⢕⠕⠁⢕⢕⢕⢕⢕⢕⢕⢕⠅⡄⢕⢕⢕⢕⢕⢕⢕⢕⢕
+⢕⢕⢕⢕⢕⠅⢗⢕⠕⣠⠄⣗⢕⢕⠕⢕⢕⢕⠕⢠⣿⠐⢕⢕⢕⠑⢕⢕⠵⢕
+⢕⢕⢕⢕⠁⢜⠕⢁⣴⣿⡇⢓⢕⢵⢐⢕⢕⠕⢁⣾⢿⣧⠑⢕⢕⠄⢑⢕⠅⢕
+⢕⢕⠵⢁⠔⢁⣤⣤⣶⣶⣶⡐⣕⢽⠐⢕⠕⣡⣾⣶⣶⣶⣤⡁⢓⢕⠄⢑⢅⢑
+⠍⣧⠄⣶⣾⣿⣿⣿⣿⣿⣿⣷⣔⢕⢄⢡⣾⣿⣿⣿⣿⣿⣿⣿⣦⡑⢕⢤⠱⢐
+⢠⢕⠅⣾⣿⠋⢿⣿⣿⣿⠉⣿⣿⣷⣦⣶⣽⣿⣿⠈⣿⣿⣿⣿⠏⢹⣷⣷⡅⢐
+⣔⢕⢥⢻⣿⡀⠈⠛⠛⠁⢠⣿⣿⣿⣿⣿⣿⣿⣿⡀⠈⠛⠛⠁⠄⣼⣿⣿⡇⢔
+⢕⢕⢽⢸⢟⢟⢖⢖⢤⣶⡟⢻⣿⡿⠻⣿⣿⡟⢀⣿⣦⢤⢤⢔⢞⢿⢿⣿⠁⢕
+⢕⢕⠅⣐⢕⢕⢕⢕⢕⣿⣿⡄⠛⢀⣦⠈⠛⢁⣼⣿⢗⢕⢕⢕⢕⢕⢕⡏⣘⢕
+⢕⢕⠅⢓⣕⣕⣕⣕⣵⣿⣿⣿⣾⣿⣿⣿⣿⣿⣿⣿⣷⣕⢕⢕⢕⢕⡵⢀⢕⢕
+⢑⢕⠃⡈⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢃⢕⢕⢕
+⣆⢕⠄⢱⣄⠛⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⢁⢕⢕⠕⢁
+⣿⣦⡀⣿⣿⣷⣶⣬⣍⣛⣛⣛⡛⠿⠿⠿⠛⠛⢛⣛⣉⣭⣤⣂⢜⠕⢑⣡⣴⣿
+*/
+#include <bits/stdc++.h>
+// #pragma GCC optimize("Ofast,unroll-loops")
+// #pragma GCC target("avx2,popcnt,lzcnt,abm,bmi,bmi2,fma,tune=native")
 
 using namespace std;
+#ifdef LOCAL
+ #include "Dbug.h"
+#else
+ #define dbg(...)
+#endif
+typedef long long LL;
+typedef long double LD;
+#define all(x) begin(x), end(x)
+#define endl "\n"
+#define CASEOUT cout << "Case " << testcase << ": "
+#define int long long
+#define pii pair<int,int>
+#ifdef LOCAL
+ const LL MAX = 100 + 2;
+#else
+ const LL MAX = (1e2) + 2;
+#endif
+const LL pi = acos(-1);
+const LL MOD = (1e9) + 7;
+const LL INF = (1e15) + 5;
 
-int main() {
-  int t = 1;
-  // cin >> t;
-  while (t--) {
-    int n, m, q;
-    cin >> n >> m >> q;
-    vector <int> a(n);
-    for (int &x : a) scanf("%d", &x), --x;
-    vector <int> to(n);
-    for (int i = 0; i < n; ++i) to[a[i]] = i;
-    vector <int> b(m);
-    for (int &x : b) scanf("%d", &x), --x, x = to[x];
-    vector <set <int>> where(n);
-    for (int i = 0; i < m; ++i) where[b[i]].emplace(i);
-    set <pair <int, int>> distinct;
-    for (int i = 0; i < n; ++i) if (!where[i].empty()) distinct.emplace(*where[i].begin(), i);
-    int adjacent = 0;
-    for (auto it = distinct.begin(); next(it) != distinct.end(); it = next(it)) {
-      if (it -> second + 1 == next(it) -> second) ++adjacent;
+void solve(int testcase)
+{
+  int n; cin>>n;
+  int ans = 0;
+  vector<int> a(n);
+    for(int i = 0; i < n; i++){
+      cin>>a[i];
     }
-    auto check = [&] () {
-      if (distinct.begin() -> second == 0 and adjacent + 1 == (int) distinct.size()) puts("YA");
-      else puts("TIDAK");
-    };
-    auto remove = [&] (int i) {
-      int x = b[i];
-      if (*where[x].begin() != i) {
-        where[x].erase(i);
-        return;
+    for(int i = 0; i < n; i++){
+      vector<int> tmp; int cnt = 0;
+      for(int j = i; j < n; j++){
+        int m = j - i + 1;
+        cnt += a[j];
+        tmp.push_back(a[j]);
+        sort(tmp.begin(), tmp.end());
+        int mid = (m - 1) / 2;
+        // cout<<cnt<<" "<<mid<<" "<<tmp[0]<<' '<<tmp[mid]<<'\n';
+        if(cnt % m == 0 && cnt / m == tmp[mid]) ans++;
       }
-      where[x].erase(where[x].begin());
-      auto it = distinct.find(make_pair(i, x));
-      if (it != distinct.begin() and prev(it) -> second + 1 == it -> second) --adjacent;
-      if (next(it) != distinct.end() and it -> second + 1 == next(it) -> second) --adjacent;
-      if (it != distinct.begin() and next(it) != distinct.end() and prev(it) -> second + 1 == next(it) -> second) ++adjacent;
-      distinct.erase(it);
-      if (!where[x].empty()) {
-        auto it = distinct.emplace(*where[x].begin(), x).first;
-        if (it != distinct.begin() and prev(it) -> second + 1 == it -> second) ++adjacent;
-        if (next(it) != distinct.end() and it -> second + 1 == next(it) -> second) ++adjacent;
-        if (it != distinct.begin() and next(it) != distinct.end() and prev(it) -> second + 1 == next(it) -> second) --adjacent;
-      }
-    };
-    auto insert = [&] (int i) {
-      int x = b[i];
-      if (!where[x].empty() and i > *where[x].begin()) {
-        where[x].emplace(i);
-        return;
-      }
-      if (!where[x].empty()) {
-        auto it = distinct.find(make_pair(*where[x].begin(), x));
-        if (it != distinct.begin() and prev(it) -> second + 1 == it -> second) --adjacent;
-        if (next(it) != distinct.end() and it -> second + 1 == next(it) -> second) --adjacent;
-        if (it != distinct.begin() and next(it) != distinct.end() and prev(it) -> second + 1 == next(it) -> second) ++adjacent;
-        distinct.erase(it);
-      }
-      auto it = distinct.emplace(i, x).first;
-      if (it != distinct.begin() and prev(it) -> second + 1 == it -> second) ++adjacent;
-      if (next(it) != distinct.end() and it -> second + 1 == next(it) -> second) ++adjacent;
-      if (it != distinct.begin() and next(it) != distinct.end() and prev(it) -> second + 1 == next(it) -> second) --adjacent;
-      where[x].emplace(i);
-    };
-    check();
-    while (q--) {
-      int x, y;
-      scanf("%d %d", &x, &y), --x, --y;
-      remove(x), b[x] = to[y], insert(x), check();
     }
-  }    
-  return 0;
+    cout<<ans<<'\n';
 }
 
+signed main()
+{
+    
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    //cout.tie(NULL);
+
+    int testCases = 1;
+    // cin >> testCases;
+    for(int i = 1 ; i <= testCases; i++)
+        solve(i);
+
+    // #ifdef LOCAL
+    //     cerr << "\nRunning Time: " << double(clock() - start) / CLOCKS_PER_SEC * 1000 << "ms" << endl;
+    // #endif
+    return 0;
+}

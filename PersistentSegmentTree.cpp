@@ -1,8 +1,8 @@
-// https://codeforces.com/contest/1771/problem/F
-
 // this calculates xor/xor_hash of all the element less than 'x' in [0, i]. query is a walk function
 
 class PST{
+    #define lc(u) tree[u].left
+    #define rc(u) tree[u].right;
     struct node{
         int left = 0, right = 0, val = 0;
     };
@@ -11,6 +11,9 @@ class PST{
 
     node create(int l, int r){
         return {l, r, merge(tree[l].val, tree[r].val)};
+    }
+    int merge(LL a, LL b){ 
+        return a ^ b;
     }
     int build(int le, int ri){
         int id = ++time;
@@ -37,9 +40,7 @@ class PST{
             return query(tree[id].left, tree[di].left, le, m);
         return query(tree[id].right, tree[di].right, m + 1, ri);
     }
-    int merge(LL a, LL b){ 
-        return a ^ b;
-    }
+    
 public:
     PST(int N, int U){ // U --> number of expected updates
         this->N = N;

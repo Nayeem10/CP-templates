@@ -277,51 +277,6 @@ namespace sieve{
       }
     }
   }
-  // O(lg n factorization for small numbers upto sieve)
-  map <ULL,int> fast_factorize(ULL n){
-      map <ULL,int> ans;
-      for(;n>1;n/=spf[n])
-          ans[spf[n]]++;
-      return ans;
-  }
-  // factorization for big numbers
-  // using pollard rho might be better
-  map <ULL,int> factorize(ULL n){
-      int cnt = 0;
-      map <ULL,int> ans;
-      for(auto p:primes){
-          if(p*p>n) break;
-          for(;n%p==0;n/=p)
-              ans[p]++;
-      }
-      if(n!=1) ans[n]++;
-      return ans;
-  }
-  // only for large numbers
-  int number_of_div(ULL n){
-      if(n < 1) return 0;
-      auto A = factorize(n);
-      int ans = 1;
-      for(auto [p,cnt]:A)
-          ans *= cnt+1;
-      return ans;
-  }
-  ULL sum_of_div(ULL n){
-      if(n < 1) return 0;
-      ULL ans = 1, ppow;
-      for(ULL p:primes){
-          if(p*p > n) break;
-          for(ppow=p; n%p==0; n/=p,ppow*=p);
-          ans *=(ppow-1)/(p-1);
-      }
-      return n == 1 ? ans: ans*(1+n);
-  }
-  ULL PHI(ULL n){
-      ULL ans = n;
-      for(auto [p,cnt]:factorize(n))
-          ans = ans/p*(p-1); 
-      return ans;
-  }
 }
 9. divisor 
 // calculate divisor in range[1,n] 

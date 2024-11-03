@@ -10,11 +10,9 @@ public:
         log.resize(n + 1);
         buildLog();
         table = vector<vector<int>>(n, vector<int>(log[n] + 1));
-
         for (int i = 0; i < n; i++) {
             table[i][0] = arr[i];
         }
-        
         for (int j = 1; (1 << j) <= n; j++) {
             for (int i = 0; i + (1 << j) <= n; i++) {
                 table[i][j] = merge(table[i][j - 1], table[i + (1 << (j - 1))][j - 1]);

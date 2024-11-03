@@ -3,7 +3,7 @@
 using namespace std;
 
 string generate_test_case();
-void runMyCode();
+int runMyCode();
 void runReferenceCode();
 bool compare_outputs();
 
@@ -12,12 +12,22 @@ int main() {
     system("g++ -o referenceCode referenceCode.cpp");
 
     srand(time(0));
-    int test_count = 5;
+    int test_count = 100;
 
     for (int i = 0; i < test_count; i++) {
         string test_case = generate_test_case();
 
-        runMyCode();
+        int status = runMyCode();
+        if (status < 0){
+            std::cout << "Error: " << strerror(errno) << '\n';
+            break;
+        }else if(status == 134){
+            cout<<"Run Time Error\n";
+            cout<<test_case<<'\n';
+            break; 
+        }else if(status == 34304){
+
+        }
         runReferenceCode();
 
         if (!compare_outputs()) {
@@ -37,22 +47,19 @@ int main() {
 
 string generateRandomString(int length) {
     string s = "";
-    string alphanum = "abcdefghijklmnopqrstuvwxyz";
+    string alphanum = "0123456789";
     for (int i = 0; i < length; ++i) {
-        s += alphanum[rand() % 26];
+        s += alphanum[rand() % 10];
     }
     return s;
 }
 
  
 mt19937 rng(random_device{}());
-
-// Function to generate random number in range [low, high]
 int randomInt(int low, int high) {
     uniform_int_distribution<int> dist(low, high);
     return dist(rng);
 }
-
 vector<int> permutation(int n){
     vector<int> p(n);
     iota(p.begin(), p.end(), 1);
@@ -66,13 +73,17 @@ string generate_test_case() {
     ofstream testcase("testcase.txt");
     stringstream ss;
     // n: number of members, m: number of sections, q: number of updates
-    int n = randomInt(1, 20); // 1 <= n <= 2 * 10^5
-    int m = randomInt(1, 20); // 1 <= m <= 2 * 10^5
-    int q = randomInt(1, 20); // 1 <= q <= 2 * 10^5
+    int n = randomInt(1, 100) * 2; // 1 <= n <= 2 * 10^5
+    int m = randomInt(1, 100) * 2; // 1 <= m <= 2 * 10^5
+    
+    testcase << n << " " << m  << endl;
+    ss << n << " " << m << endl;
+    for(int i = 0; i < n; i++){
+        string s = generateRandomString(m);
+        testcase << s <<'\n';
+        ss <<s<<'\n';
 
-    testcase << n << " " << m << " " << q << endl;
-    ss << n << " " << m << " " << q << endl;
-
+    }
     testcase.close();
     return ss.str();
 }
@@ -80,8 +91,9 @@ string generate_test_case() {
     
 
 // Function to run the real implementation
-void runMyCode() {
-    system("./myCode < testcase.txt > myOutput.txt");
+int runMyCode() {
+    int status = system("./myCode < testcase.txt > myOutput.txt");
+    return status;
 }
 
 void runReferenceCode() {
