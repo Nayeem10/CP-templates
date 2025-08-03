@@ -21,25 +21,6 @@ struct Query {
         return r < other.r;
     }
 };
-
-void add(int idx) {
-    fr[a[idx]]++;
-    if (fr[a[idx]] % 2) {
-        odd++;
-    }else{
-        odd--;
-    }
-}
-
-void remove(int idx) {
-    fr[a[idx]]--;
-    if (fr[a[idx]] % 2) {
-        odd++;
-    }else{
-        odd--;
-    }
-}
-
 vector<bool> mo_algorithm(vector<Query> &queries, int n, int q) {
     sort(queries.begin(), queries.end());
     
@@ -59,11 +40,6 @@ vector<bool> mo_algorithm(vector<Query> &queries, int n, int q) {
         }
         while (currl > l) {
             add(--currl);
-        }
-        if (!odd) {
-            result[idx] = 1;
-        } else {
-            result[idx] = 0;
         }
     }
     return result;

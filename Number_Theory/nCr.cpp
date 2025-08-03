@@ -8,10 +8,10 @@ namespace com{
             inv_fact[i] = 1LL * inv_fact[i - 1] * inv[i] % mod;
         }
     }
-    int C(int n, int r){
+    LL C(int n, int r){
         return (r < 0 or r > n) ? 0 : 1LL * fact[n] * inv_fact[r] % mod * inv_fact[n - r] % mod;
     }
-    int fac(int n){
+    LL fac(int n){
         return fact[n];
     }
 }

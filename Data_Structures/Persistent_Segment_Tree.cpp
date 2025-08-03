@@ -1,5 +1,4 @@
 // this calculates xor/xor_hash of all the element less than 'x' in [0, i]. query is a walk function
-
 class PST{
     #define lc(u) tree[u].left
     #define rc(u) tree[u].right;
@@ -45,7 +44,7 @@ public:
     PST(int N, int U){ // U --> number of expected updates
         this->N = N;
         LG = 33 - __builtin_clz(N);
-        tree = new node[(N + U) * LG];
+        tree = new node[N * 4 + U * LG];
         build(0, N - 1); 
     }
     int update(int id, int pos, int val){

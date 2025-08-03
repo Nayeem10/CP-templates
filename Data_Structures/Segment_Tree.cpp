@@ -60,14 +60,22 @@ class segmentTree {
 
  public:
   segmentTree() {}
-  segmentTree(vector<DT> &v, DT (*fptr)(DT, DT), DT _I) {
+  segmentTree(vector<DT> &v, DT (*fptr)(DT, DT), DT I) {
     n = v.size();
-    I = _I;
+    this->I = I;
     merge = fptr;
     seg = new DT[4 * n];
     build(0, 0, n - 1, v);
   }
-  void update(int pos, int val) { update(0, 0, n - 1, pos, val); }
+  segmentTree(int n, DT (*fptr)(DT, DT), DT I) {
+    this->n = n;
+    this->I = I;
+    merge = fptr;
+    seg = new DT[4 * n];
+    for(int i = 0; i < 4 * n; i++)
+      seg[i] = I;
+  }
+  void update(int pos, DT val) { update(0, 0, n - 1, pos, val); }
   int walk(int l, int r, DT val) {
     if (query(l, r) > val) return r;
     return walk(0, 0, n - 1, l, r, val);

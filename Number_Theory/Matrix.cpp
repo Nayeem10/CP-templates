@@ -1,28 +1,39 @@
-int n;
+template<typename DT>
 struct Matrix{
-  vector<vector<LL>> Mat = vector<vector<LL>>(n, vector<LL>(n));
-    // memset(Mat,0,sizeof(Mat));
-  Matrix operator*(const Matrix &other){
-	  Matrix product;
-	  for (int i = 0; i < n; i++){
-	    for (int j = 0; j < n; j++){
-	      for (int k = 0; k < n; k++){
-	        LL temp = ((Mat[i][k] % mod)*(other.Mat[k][j]%mod))%mod;
-	        product.Mat[i][j] = (product.Mat[i][j] % mod + temp % mod) % mod;
-	      }
-	    }
-	  }
-	  return product;
-  }
+    vector<vector<DT>> mat;
+    Matrix(vector<vector<DT>> &mat) : mat(mat) {}
+    Matrix(int n) : mat(n, vector<DT> (n)){
+        for(int i = 0; i < n; i++){
+            mat[i][i] = 1;
+        }
+    }
+    Matrix(int n, int m) : mat(n, vector<DT> (m)) {}
+
+    Matrix operator*(Matrix &other){
+        auto &a = mat, &b = other.mat;
+        assert(a[0].size() == b.size());
+        int n = a.size(), m = b[0].size(), s = a[0].size();
+        Matrix<DT> ret(n, m);
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                DT temp = 0;
+                for(int k = 0; k < s; k++){
+                    temp += a[i][k] * b[k][j];
+                }
+                ret.mat[i][j] = temp;
+            }
+        }
+        return ret;
+    }
 };
-Matrix MatExpo(Matrix a, int p){
-  Matrix product;
-  for (int i = 0; i < n; i++)
-    product.Mat[i][i] = 1;
-  while (p > 0){
-    if (p % 2) product = product * a;
-    p /= 2;
-    a = a * a;
-  }
-  return product;
+
+Matrix<double> pow(Matrix<double> a, LL p){
+    int n = a.mat.size();
+    Matrix<double> ret(n);
+    while(p){
+        if(p & 1) ret = ret * a;
+        a = a * a;
+        p >>= 1;
+    }
+    return ret;
 }

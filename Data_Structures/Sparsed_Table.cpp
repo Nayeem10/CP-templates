@@ -1,11 +1,11 @@
-class SparseTable {
+class SparsedTable {
 private:
     vector<vector<int>> table;
     vector<int> log;
     int n;
 
 public:
-    SparseTable(const vector<int>& arr) {
+    SparsedTable(const vector<int>& arr) {
         n = arr.size();
         log.resize(n + 1);
         buildLog();
@@ -20,7 +20,7 @@ public:
         }
     }
     int merge(int a, int b){
-        return max(a, b);
+        return a | b;
     }
     void buildLog() {
         log[1] = 0;

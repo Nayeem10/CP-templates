@@ -41,13 +41,4 @@ public:
         }
         return tree[cur].leaf > 0;
     }
-    int maxor(string &s){
-        int cur = 0, p = 0, ans = 0;
-        for(auto u: s, p++){
-            int zero = tree[cur].child[0], one = tree[cur].child[1];
-            cur = (u == '0' ? ~one ? one : zero : ~zero ? zero : one);
-            ans |= (((u == '0' && ~one) || (u == '1' && ~zero)) << p);
-        }
-        return ans;
-    }
 };
