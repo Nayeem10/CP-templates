@@ -7,39 +7,40 @@ using namespace __gnu_pbds;
  
 #define PLL pair<long long, long long>
 #define LL long long
- 
-#define faster {ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);}
-#define ordered_set tree<int, null_type,less_equal<int>, rb_tree_tag,tree_order_statistics_node_update>
-#define all(v) v.begin(),v.end()
- 
-const LL mod =  998244353;
-const int N = 2e5 + 7;
- 
-const LL INF = 1e17 + 1;
-const int inf = 1e9 + 1;
 
-void solve(int tc) {
-    int n, k; cin >> n >> k;
-    multiset<int> ms;
-    for(int i = 0; i < n; i++){
-        int u; cin >> u; ms.insert(u);
-    }
-    LL ans = 0;
-    while(*ms.rbegin() - *ms.begin() - 1 > k){
-        ans += k;
-        int r = *ms.rbegin() - 1, l = *ms.begin() + 1;
-        ms.erase(ms.begin());
-        auto it = ms.end(); it--;
-        ms.erase(it);
-        ms.insert(l); ms.insert(r);
-    }
-    for(auto u: ms){
-        // cout << u << ' ';
-        ans += (1LL * u * (u + 1) / 2);
-    }
-    cout << ans << '\n';
-}
+#define faster { ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL); }
+#define ordered_set tree<int, null_type,less<int>, rb_tree_tag,tree_order_statistics_node_update>
+#define all(v) v.begin(), v.end()
  
+const int N = 2e5 + 7;
+const LL mod = 1e9 + 7;
+const LL INF = 1e17 + 10;
+const int inf = 1e9 + 10;
+
+void solve(int tc){
+    int n; cin >> n;
+    vector<int> a(n), b(n);
+    for(auto &u: a)
+        cin >> u;
+    for(auto &u: b)
+        cin >> u;
+    LL cnt = 0;
+    for(int l = 0; l < n; l++){
+        for(int r = l; r < n; r++){
+            int mx = 0;
+            for(int i = l; i <= r; i++){
+                if(a[i] > mx) {
+                    if(a[i] == b[i]) cnt++;
+                    mx = a[i];
+                }else{
+                    if(b[i] <= mx) cnt++;
+                }
+            }
+        }
+    }
+    cout << cnt << '\n';
+}
+
 signed main() {
     faster
     int t = 1;

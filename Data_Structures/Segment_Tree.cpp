@@ -85,11 +85,3 @@ class segmentTree {
 };
 
 int fun(int a, int b) { return max(a, b); }
-
-int main(){
-  int n; cin >> n;
-  vector<int> a(n);
-  for(int &i: a)
-    cin >> i;
-  segmentTree tree(a, fun, 0); // a max segment tree.
-}

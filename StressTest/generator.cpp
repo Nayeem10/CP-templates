@@ -60,48 +60,14 @@ vector<pair<int, int>> generate_random_tree(int n) {
 
 
 int main() {
-    int mxN = 1e5, mxM = 5000, mxQ = 1e5, mxX = 1e9, mxK = 1e9;
-    int totalN = 0, totalQ = 0;
-    int maxT = 10000;
-    vector<string> testcases;
-
-    for (int tc = 0; tc < maxT; ++tc) {
-        // Limit remaining room
-        int maxN = min(mxN - totalN, 1000);
-        int maxQ = min(mxQ - totalQ, 1000);
-        if (maxN == 0 || maxQ == 0) break;
-
-        int n = randomInt(1, maxN);
-        int m = randomInt(1, mxM);
-        int q = randomInt(1, maxQ);
-
-        totalN += n;
-        totalQ += q;
-
-        stringstream ss;
-        ss << n << ' ' << m << '\n';
-        for (int i = 0; i < n; ++i) {
-            ss << randomInt(1, mxX) << " \n"[i == n - 1];
-        }
-        ss << q << '\n';
-
-        while (q--) {
-            int t = randomInt(1, 100) % 2 + 1;
-            ss << t << ' ';
-            if (t == 1) {
-                int i = randomInt(1, n), x = randomInt(1, mxX);
-                ss << i << ' ' << x << '\n';
-            } else {
-                int l = randomInt(1, n), r = randomInt(l, n), k = randomInt(1, mxK);
-                ss << l << ' ' << r << ' ' << k << '\n';
-            }
-        }
-
-        testcases.push_back(ss.str());
+    int n = randomInt(1, 5);
+    cout << n << '\n';
+    for(int i = 0; i < n; i++){
+        cout << randomInt(1, 2 * n) << ' ';
     }
-
-    cout << testcases.size() << '\n';
-    for (auto &tc : testcases) {
-        cout << tc;
+    cout << '\n';
+    for(int i = 0; i < n; i++){
+        cout << randomInt(1, 2 * n) << ' ';
     }
+    cout << '\n';
 }

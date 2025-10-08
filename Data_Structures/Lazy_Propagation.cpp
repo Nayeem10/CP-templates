@@ -1,117 +1,83 @@
-#include<bits/stdc++.h>
-using namespace std;
+template <typename T, typename U>
+struct LazySegmentTree {
+    vector<T> tree; 
+    vector<U> lazy;
+    int n;
+    T I;
+    function<T(T, T)> merge;
 
-class LazySegmentTree {
-    vector<int> tree;  
-    vector<int> lazy; 
-    int n, I;
+    ///////////////////////////////////////////////////////////////////////////
+    void updateLazy(int id, U val) { lazy[id] += val; }
 
-    int merge(int a, int b) {
-        return a + b;
-    }
-
-    void propagate(int node, int le, int ri) {
-        if (lazy[node] != 0) {
-            tree[node] += (ri - le + 1) * lazy[node]; 
-            if (le != ri) { 
-                lazy[2 * node + 1] += lazy[node];  
-                lazy[2 * node + 2] += lazy[node]; 
-            }
-            lazy[node] = 0; 
+    void push(int id, int le, int ri) {
+        tree[id] += (ri - le + 1) * lazy[id];
+        if (le != ri) { 
+            updateLazy(2 * id + 1, lazy[id]);
+            updateLazy(2 * id + 2, lazy[id]);
         }
+        lazy[id] = 0;
     }
+    ///////////////////////////////////////////////////////////////////////////
 
-    void build(int node, int le, int ri, vector<int> &arr) {
+    void fix(int id) { tree[id] = merge(tree[2 * id + 1], tree[2 * id + 2]); }
+
+    void build(int id, int le, int ri, vector<T> &arr) {
         if (le == ri) {
-            tree[node] = arr[le]; 
+            tree[id] = arr[le];
             return;
         }
         int mid = (le + ri) / 2;
-        build(2 * node + 1, le, mid, arr); 
-        build(2 * node + 2, mid + 1, ri, arr);
-        tree[node] = merge(tree[2 * node + 1] , tree[2 * node + 2]);
+        build(2 * id + 1, le, mid, arr);
+        build(2 * id + 2, mid + 1, ri, arr);
+        fix(id);
     }
 
-    void update(int node, int le, int ri, int l, int r, int val) {
-        propagate(node, le, ri); 
-        if (r < le || l > ri) { 
-            return;
-        }
-        if (le >= l && ri <= r) { 
-            tree[node] += (ri - le + 1) * val;
-            if (le != ri) {
-                lazy[2 * node + 1] += val;  
-                lazy[2 * node + 2] += val; 
-            }
+    void update(int id, int le, int ri, int l, int r, U val) {
+        push(id, le, ri);
+        if (r < le || l > ri) return;
+        if (le >= l && ri <= r) {
+            updateLazy(id, val), push(id, le, ri);
             return;
         }
         int mid = (le + ri) / 2;
-        update(2 * node + 1, le, mid, l, r, val);      
-        update(2 * node + 2, mid + 1, ri, l, r, val); 
-        tree[node] = merge(tree[2 * node + 1] , tree[2 * node + 2]);
+        update(2 * id + 1, le, mid, l, r, val);
+        update(2 * id + 2, mid + 1, ri, l, r, val);
+        fix(id);
     }
 
-    int query(int node, int le, int ri, int l, int r) {
-        propagate(node, le, ri); 
-        if (l <= le && r >= ri) {
-            return tree[node];
-        }
-        if (r < le || l > ri) {
-            return I;
-        }
+    T query(int id, int le, int ri, int l, int r) {
+        push(id, le, ri);
+        if (r < le || l > ri) return I;
+        if (l <= le && ri <= r) return tree[id];
         int mid = (le + ri) / 2;
-        return merge(query(2 * node + 1, le, mid, l, r) , query(2 * node + 2, mid + 1, ri, l, r));
+        return merge(query(2 * id + 1, le, mid, l, r),
+                     query(2 * id + 2, mid + 1, ri, l, r));
     }
 
+    int findL(int id, int le, int ri, int l, int r, T val){
+        push(id, le, ri);
+        if(r < le || l > ri) return r + 1;
+        if(l <= le && ri <= r && tree[id] > val) return r + 1;
+        if(le == ri) return le;
+        
+        int mid = (le + ri) / 2;
+        int left = findL(2 * id + 1, le, mid, l, r, val);
+        if(left <= r) return left;
+        return findL(2 * id + 2, mid + 1, ri, l, r, val);
+    }
 public:
-    LazySegmentTree(vector<int> &arr, int I) {
-        n = arr.size(); this->I = I;
-        tree.resize(4 * n, 0);
-        lazy.resize(4 * n, 0);
-        build(0, 0, n - 1, arr); 
+    LazySegmentTree(vector<T> &arr, T I, function<T(T, T)> merge)
+        : n(arr.size()), I(I), merge(merge) {
+        tree.assign(4 * n, I);
+        lazy.assign(4 * n, 0);
+        build(0, 0, n - 1, arr);
     }
-
-    void update(int l, int r, int val) {
-        update(0, 0, n - 1, l, r, val);
+    LazySegmentTree(int n, T I, function<T(T, T)> merge)
+        : n(n), I(I), merge(merge) {
+        tree.assign(4 * n, I);
+        lazy.assign(4 * n, 0);
     }
-
-    int query(int l, int r) {
-        return query(0, 0, n - 1, l, r);
-    }
+    void update(int l, int r, U val) { update(0, 0, n - 1, l, r, val); }
+    T query(int l, int r) { return query(0, 0, n - 1, l, r); }
+    int findL(int l, int r, T val) { return findL(0, 0, n - 1, l, r, val); }
 };
-
-
-void solve(){
-    int n,q;
-    cin>>n>>q;
-    int a[n];
-    for(int i=0;i<n;i++){
-        cin>>a[i];
-    }
-    LazySegmentTree tree(a,n);
-    while(q--){
-        int c;
-        cin>>c;
-        if(c==1){
-            int l,r,val;
-            cin>>l>>r>>val;
-            tree.update(l-1,r-1,val);
-        }else{
-            int a,b;
-            cin>>a>>b;
-            cout<<tree.query(a-1,b-1)<<endl;
-        }
-    }
-}
-
-signed main(){
-    faster
-    //debugMode();
-    int t=1;
-    //cin>>t;
-    for(int cs=1;cs<=t;cs++){
-        //cout<<"Case "<<cs<<": ";
-        solve();
-    }
-    return 0;
-}
