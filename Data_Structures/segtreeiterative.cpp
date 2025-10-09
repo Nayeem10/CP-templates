@@ -1,31 +1,12 @@
-// https://codeforces.com/contest/2145/problem/E
-#include <bits/stdc++.h> 
-using namespace std;
- 
-#define PLL pair<long long, long long>
-#define LL long long
-
-#define faster { ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL); }
-#define all(v) v.begin(), v.end()
-
-const int N = 500 + 7;
-const LL mod = 1e9 + 7;
-const LL INF = 1e17 + 10;
-const int inf = 1e9 + 10;
-
-template<typename T, typename L>
+template<class T, class L, T it, L il, T(*mergeT)(T, T), T(*applyL)(T, L), L(*mergeL)(L, L)>
 struct SegTree{
     int n, h;
     vector<T> tree; 
     vector<L> lazy;
-    T it; L il;
-
-    function<T(T, T)> mergeT;
-    function<L(L, L)> mergeL;
-    function<T(T, L)> applyL;
-    function<bool(T, T)> compLe;
-    function<bool(T, T)> compRi;
-
+ 
+    bool (*compLe)(T, T);
+    bool (*compRi)(T, T);
+ 
     void apply(int id, L val){
         tree[id] = applyL(tree[id], val);
         if(id < n) lazy[id] = mergeL(lazy[id], val);
@@ -45,7 +26,7 @@ struct SegTree{
             lazy[pid] = il;
         }
     }
-
+ 
     void update(int l, int r, L val){
         l += n, r += n + 1;
         pushDown(l), pushDown(r - 1);
@@ -55,14 +36,14 @@ struct SegTree{
         }
         pushUp(l), pushUp(r - 1);
     }
-
+ 
     T query(int l, int r){
         l += n, r += n + 1;
         pushDown(l), pushDown(r - 1);
         T lft = it, ryt = it;
         for(int i = l, j = r; i < j; i >>= 1, j >>= 1){
-            if(i & 1) lft = mergeT(lft, tree[i++]);
-            if(j & 1) ryt = mergeT(tree[--j], ryt);
+            lft = (i & 1) ? mergeT(lft, tree[i++]) : lft;
+            ryt = (j & 1) ? mergeT(tree[--j], ryt) : ryt;
         }
         return mergeT(lft, ryt);
     }
@@ -105,83 +86,17 @@ struct SegTree{
         if(id == 2 * n) id = n - 1;
         return id - n;
     }
-    SegTree(vector<T> &v, T it, L il,
-        function<T(T, T)> mergeT,
-        function<L(L, L)> mergeL,
-        function<T(T, L)> applyL,
-        function<bool(T, T)> compLe,
-        function<bool(T, T)> compRi)
-        : n(v.size()), it(it), il(il), 
-        mergeT(mergeT), mergeL(mergeL), applyL(applyL), compLe(compLe), compRi(compRi) {
+    SegTree() {}
+    SegTree(vector<T> &v, bool (*compLe)(T, T), bool (*compRi)(T, T))
+        : n(v.size()), compLe(compLe), compRi(compRi) {
         
-        h = 33 - __builtin_clz(n);
+        h = 32 - __builtin_clz(n);
         tree.assign(2 * n, it);
         lazy.assign(n, il);
+ 
         for(int i = 0; i < n; i++)
             tree[i + n] = v[i];
         for(int i = n - 1; i > 0; i--)
             tree[i] = mergeT(tree[i << 1], tree[i << 1 | 1]);
     }
 };
-
-void solve(int tc){
-    int ac, dr; cin >> ac >> dr;
-    int n; cin >> n;
-    vector<int> a(n), d(n);
-    for(auto &u: a){
-        cin >> u;
-    }
-    for(auto &u: d){
-        cin >> u;
-    }
-    vector<int> freq(n), pref(n), score(n);
-    for(int i = 0; i < n; i++){
-        int tot = max(0, a[i] - ac) + max(0, d[i] - dr);
-        if(tot < n) freq[tot]++;
-        score[i] = tot;
-    }
-    for(int i = 1; i < n; i++){
-        pref[i] = pref[i - 1] + freq[i - 1];
-    }
-    for(int i = 0; i < n; i++){
-        pref[i] -= i;
-    }
-
-    auto Sum = [&](int a, int b) -> int{
-        return a + b;
-    };
-    auto Min = [&](int a, int b) -> int{
-        return min(a, b);
-    };
-    auto comp = [&](int a, int b) -> bool{
-        return a < b;
-    };
-    SegTree<int, int> segMax(pref, inf, 0, Min, Sum, Sum, comp, NULL);
-    SegTree<int, int> segSum(freq, 0, 0, Sum, NULL, Sum, NULL, NULL);
-
-    int q; cin >> q;
-    while(q--){
-        int k, na, nd; cin >> k >> na >> nd; k--;
-        
-        if(score[k] < n - 1) segMax.update(score[k] + 1, n - 1, -1);
-        if(score[k] < n) segSum.update(score[k], score[k], -1);
-    
-        score[k] = max(0, na - ac) + max(0, nd - dr);
-        if(score[k] < n - 1) segMax.update(score[k] + 1, n - 1, 1);
-        if(score[k] < n) segSum.update(score[k], score[k], 1);
-
-        int lft = segMax.findL(0, 0);
-        cout << segSum.query(0, lft - 1) << '\n';
-    }
-
-}
-
-signed main() {
-    faster
-    int t = 1;
-    // cin >> t;
-    for (int tc = 1; tc <= t; tc++) {
-        solve(tc);
-    }
-    return 0;
-}
