@@ -48,6 +48,7 @@ struct SegTree{
 
     void update(int l, int r, L val){
         l += n, r += n + 1;
+        pushDown(l), pushDown(r - 1);
         for (int i = l, j = r; i < j; i >>= 1, j >>= 1) {
             if (i & 1) apply(i++, val);
             if (j & 1) apply(--j, val);
@@ -113,7 +114,7 @@ struct SegTree{
         : n(v.size()), it(it), il(il), 
         mergeT(mergeT), mergeL(mergeL), applyL(applyL), compLe(compLe), compRi(compRi) {
         
-        h = 32 - __builtin_clz(n);
+        h = 33 - __builtin_clz(n);
         tree.assign(2 * n, it);
         lazy.assign(n, il);
         for(int i = 0; i < n; i++)
