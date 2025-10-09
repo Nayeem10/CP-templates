@@ -58,12 +58,12 @@ struct SegTree{
     T query(int l, int r){
         l += n, r += n + 1;
         pushDown(l), pushDown(r - 1);
-        T ans = it;
+        T lft = it, ryt = it;
         for(int i = l, j = r; i < j; i >>= 1, j >>= 1){
-            if(i & 1) ans = mergeT(ans, tree[i++]);
-            if(j & 1) ans = mergeT(ans, tree[--j]);
+            if(i & 1) lft = mergeT(lft, tree[i++]);
+            if(j & 1) ryt = mergeT(tree[--j], ryt);
         }
-        return ans;
+        return mergeT(lft, ryt);
     }
     int findL(int l, T val){
         l += n, pushDown(l), pushDown(2 * n - 1);
