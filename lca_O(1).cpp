@@ -33,37 +33,38 @@ public:
     }
 };
 
-void eularTour(int u, int p, int d, vector<int> g[], vector<pair<int, int>> &circuit, vector<int> &invMap){
+void dfs(int u, int p, int d, vector<int> g[], vector<pair<int, int>> &order, vector<int> &mp){
     for(auto v: g[u]){
         if(v == p) continue;
-        circuit.push_back({d, u});
-        eularTour(v, u, d + 1, g, circuit, invMap);
+        order.push_back({d, u});
+        dfs(v, u, d + 1, g, order, mp);
     }
-    circuit.push_back({d, u});
-    invMap[u] = (int) circuit.size() - 1;
+    order.push_back({d, u});
+    mp[u] = (int) order.size() - 1;
 }
 
 void solve(int tc) {
     int n, q; cin >> n >> q;
-    vector<int> g[n + 1], invMap(n + 1);
-    vector<pair<int, int>> circuit;
+    vector<int> g[n + 1], mp(n + 1);
+    vector<pair<int, int>> order;
+    
     for(int u = 2, v; u <= n; u++){
         cin >> v;
         g[u].push_back(v);
         g[v].push_back(u);
     }
-    eularTour(1, 0, 0, g, circuit, invMap);
-    SparsedTable<pair<int, int>> sp(circuit);
+    dfs(1, 0, 0, g, order, mp);
+    SparsedTable<pair<int, int>> sp(order);
 
     auto lca = [&](int u, int v){
-        if(invMap[u] > invMap[v]) swap(u, v);
+        if(mp[u] > mp[v]) swap(u, v);
 
-        return sp.query(invMap[u], invMap[v]).second;
+        return sp.query(mp[u], mp[v]).second;
     };
     auto dis = [&](int u, int v){
         int w = lca(u, v);
-        u = invMap[u], v = invMap[v], w = invMap[w];
-        return circuit[u].first + circuit[v].first - 2 * circuit[w].first + 1;
+        u = mp[u], v = mp[v], w = mp[w];
+        return order[u].first + order[v].first - 2 * order[w].first + 1;
     };
     auto ans = [&](int u, int v, int w){
         if(lca(u, w) == lca(v, w)) return dis(lca(u, v), w);

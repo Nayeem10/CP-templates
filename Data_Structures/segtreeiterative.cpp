@@ -87,9 +87,14 @@ struct SegTree{
         return id - n;
     }
     SegTree() {}
+    SegTree(int n, bool (*compLe)(T, T), bool (*compRi)(T, T))
+        : n(n), compLe(compLe), compRi(compRi) {
+        h = 32 - __builtin_clz(n);
+        tree.assign(2 * n, it);
+        lazy.assign(n, il);
+    }
     SegTree(vector<T> &v, bool (*compLe)(T, T), bool (*compRi)(T, T))
         : n(v.size()), compLe(compLe), compRi(compRi) {
-        
         h = 32 - __builtin_clz(n);
         tree.assign(2 * n, it);
         lazy.assign(n, il);

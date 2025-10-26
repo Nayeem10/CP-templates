@@ -1,9 +1,9 @@
 #!/bin/bash
 # Call as sh stress.sh ITERATIONS
 
-g++ candidate.cpp -o candidate  # candidate solution
-g++ bruteforce.cpp -o bruteforce # bruteforce solution
-g++ generator.cpp -o generator # test case generator
+g++ -std=c++20 candidate.cpp -o candidate  # candidate solution
+g++ -std=c++20 bruteforce.cpp -o bruteforce # bruteforce solution
+g++ -std=c++20 generator.cpp -o generator # test case generator
 
 > all.txt
 

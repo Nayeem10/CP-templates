@@ -60,14 +60,12 @@ vector<pair<int, int>> generate_random_tree(int n) {
 
 
 int main() {
-    int n = randomInt(1, 5);
+    int n = 7;
     cout << n << '\n';
-    for(int i = 0; i < n; i++){
-        cout << randomInt(1, 2 * n) << ' ';
-    }
-    cout << '\n';
-    for(int i = 0; i < n; i++){
-        cout << randomInt(1, 2 * n) << ' ';
+    for(int i = 1; i <= n; i++){
+        int t = randomInt(1, n - 1);
+        if(t >= i) t++;
+        cout << t << ' ';
     }
     cout << '\n';
 }
