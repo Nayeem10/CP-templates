@@ -18,42 +18,39 @@ const LL INF = 1e17 + 10;
 const int inf = 1e9 + 10;
 
 void solve(int tc) {
-    LL n, k; cin >> n >> k;
-    vector<LL> a(n), fr(n + 1, 1);
-    for(auto &u: a)
-        cin >> u;
-    sort(all(a));
-    LL sum = 0;
-    LL ans = 0;
+    int a, b; cin >> a >> b;
+    int n = a + b;
+    vector<int> l, r;
+    for(int i = 1; i <= n; i++){
+        l.push_back(i);
+    }
+    for(int i = 1; i <= b; i++){
+        r.push_back(a + i);
+    }
+    for(int i = 1; i <= a; i++){
+        r.push_back(i);
+    }
+    set<pair<int, int>> s;
     for(int i = 0; i < n; i++){
-        ans = (ans + sum * a[i] % mod) % mod;
-        sum = (sum + a[i]) % mod;
-    cout << sum  << ' ' << k << '\n';
+        int x = l[i], y = r[i];
+        if(x > y) swap(x, y);
+        s.insert({x, y});
+        cout << x << ' ' << y << '\n';
     }
     for(int i = 0; i < n; i++){
-        LL diff = (i == n - 1 ? INF : a[i + 1]) - a[i];
-        LL taken = min(diff, k / fr[i]);
-        LL cost = taken * fr[i];
-        k -= cost;
-        LL cur = (sum - a[i] + mod) % mod;
-        LL f = fr[i], d = fr[i] - 1;
-        ans = (ans + (f * (cur * taken % mod + (d * ((taken * (taken - 1) / 2) % mod)) % mod) % mod + (f * (f - 1) / 2) % mod) * taken % mod) % mod;
-        sum = (sum + cost) % mod;
-        a[i] += taken;
-
-        if(taken == diff) fr[i + 1] += fr[i], fr[i] = 0;
-        if(fr[i]){
-            cur = (sum - a[i] + mod) % mod;
-            ans = (ans + cur * k % mod + k * (k - 1) / 2) % mod;
-            k = 0;
-        }
+        int x = l[i], y = r[(i - 1 + n) % n];
+        if(x > y) swap(x, y);
+        s.insert({x, y});
+        cout << x << ' ' << y << '\n';
+        
     }
+    cout << s.size() << '\n';
 }
 
 signed main() {
     faster
     int t = 1;
-    cin >> t;
+    // cin >> t;
     for (int tc = 1; tc <= t; tc++) {
         solve(tc);
     }
