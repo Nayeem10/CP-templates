@@ -18,7 +18,7 @@ struct Matrix{
             for(int j = 0; j < m; j++){
                 DT temp = 0;
                 for(int k = 0; k < s; k++){
-                    temp += a[i][k] * b[k][j];
+                    temp = (temp + a[i][k] * b[k][j]) % mod;
                 }
                 ret.mat[i][j] = temp;
             }
@@ -27,9 +27,9 @@ struct Matrix{
     }
 };
 
-Matrix<double> pow(Matrix<double> a, LL p){
+Matrix<LL> pow(Matrix<LL> a, LL p){
     int n = a.mat.size();
-    Matrix<double> ret(n);
+    Matrix<LL> ret(n);
     while(p){
         if(p & 1) ret = ret * a;
         a = a * a;

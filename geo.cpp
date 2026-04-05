@@ -37,17 +37,17 @@ inline TI cross(Point a, Point b) { return a.x * b.y - a.y * b.x; }
 inline TI cross(Point a, Point b, Point c) { return cross(b - a, c - a); }
 inline double dist(Point a, Point b) { return sqrt(dot(a - b, a - b)); }
 
-bool isPointOnSegment(Point a, Point b, Point p) {
+bool isPointOnSegment(point a, point b, point p) {
     return cross(a, b, p) == 0 &&
            p.x >= min(a.x, b.x) && p.x <= max(a.x, b.x) &&
            p.y >= min(a.y, b.y) && p.y <= max(a.y, b.y);
 }
 
 // -1 --> outside, 0 --> boundary, 1 --> inside
-int pointInPolygon(vector<Point> &pol, Point z) {
+int pointInPolygon(vector<point> &pol, point z) {
     int n = pol.size(), winding = 0;
     for(int i = 0; i < n; i++) {
-        Point p1 = pol[i], p2 = pol[(i + 1) % n];
+        point p1 = pol[i], p2 = pol[(i + 1) % n];
         if(isPointOnSegment(p1, p2, z)) return 0;
         int ori = sign(cross(p1, p2, z));
         if(p1.y <= z.y && p2.y > z.y && ori > 0) winding++;

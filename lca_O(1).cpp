@@ -44,18 +44,10 @@ void dfs(int u, int p, int d, vector<int> g[], vector<pair<int, int>> &order, ve
 }
 
 void solve(int tc) {
-    int n, q; cin >> n >> q;
     vector<int> g[n + 1], mp(n + 1);
     vector<pair<int, int>> order;
-    
-    for(int u = 2, v; u <= n; u++){
-        cin >> v;
-        g[u].push_back(v);
-        g[v].push_back(u);
-    }
     dfs(1, 0, 0, g, order, mp);
     SparsedTable<pair<int, int>> sp(order);
-
     auto lca = [&](int u, int v){
         if(mp[u] > mp[v]) swap(u, v);
 
@@ -64,14 +56,6 @@ void solve(int tc) {
     auto dis = [&](int u, int v){
         int w = lca(u, v);
         u = mp[u], v = mp[v], w = mp[w];
-        return order[u].first + order[v].first - 2 * order[w].first + 1;
+        return order[u].first + order[v].first - 2 * order[w].first;
     };
-    auto ans = [&](int u, int v, int w){
-        if(lca(u, w) == lca(v, w)) return dis(lca(u, v), w);
-        return min(dis(lca(u, w), w), dis(lca(v, w), w));
-    };
-    while(q--){
-        int u, v, w; cin >> u >> v >> w;
-        cout << max({ans(u, v, w), ans(v, w, u), ans(w, u, v)}) << '\n';
-    }
 }

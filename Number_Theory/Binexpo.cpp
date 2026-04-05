@@ -1,4 +1,4 @@
-LL bigmod(LL x, LL n, LL M = mod){
+LL Power(LL x, LL n, LL M = mod){
     if (n == -1) n = M - 2;
     LL ans = 1;
     while (n) {

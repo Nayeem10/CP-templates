@@ -1,3 +1,22 @@
+#include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+ 
+using namespace std;
+using namespace __gnu_pbds;
+ 
+#define PLL pair<long long, long long>
+#define LL long long
+
+#define faster { ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL); }
+#define ordered_multiset tree<int, null_type,less_equal<int>, rb_tree_tag,tree_order_statistics_node_update>
+#define all(v) v.begin(), v.end()
+
+const int N = 2e5 + 7;
+const LL mod = 1e9 + 7;
+const LL INF = 1e17 + 10;
+const int inf = 1e9 + 10;
+
 struct Dinic{
     struct edge{
         int to, rid, isRev;
@@ -29,69 +48,39 @@ struct Dinic{
     }
     LL dfs(int u, LL flow){
         if(u == t) return flow;
-        LL ret = 0;
-        for(int &i = ptr[u]; i < (int) g[u].size() and flow; i++){
+        for(int &i = ptr[u]; i < (int) g[u].size(); i++){
             edge &e = g[u][i];
             int v = e.to;
             if(level[v] != level[u] + 1 or e.cap <= e.flow) continue;
             LL cflow = dfs(v, min(flow, e.cap - e.flow));
-            ret += cflow; flow -= cflow;
-            e.flow += cflow, g[v][e.rid].flow -= cflow;
+            if(cflow){
+                e.flow += cflow, g[v][e.rid].flow -= cflow;
+                return cflow;
+            }
         }
-        return ret;
+        return 0;
     }
     LL maxFlow(int s, int t){
         this->s = s, this->t = t;
         LL flow = 0;
         while(bfs()){
             ptr.assign(n, 0);
-            flow += dfs(s, INF);
+            while(LL cflow = dfs(s, INF)) flow += cflow;
         }
         return flow;
     }
-    set<int> vertexCover(){
-        set<int> cover;
-        vector<pair<int, int>> match;
-        for(int u = 0; u < n; u++){
-            if(u == s or u == t) continue;
-            for(auto e: g[u]){
-                int v = e.to;
-                if(v == s or v == t or e.isRev) continue;
-                if(e.flow == e.cap){
-                    match.push_back({u, v});
-                    cover.insert(u), cover.insert(v);
-                }
-            }
-        }
-        auto check = [&](int u){
-            for(auto e: g[u]){
-                int v = e.to;
-                if(v == s or v == t or cover.find(v) != cover.end()) continue;
-                return 1;
-            }
-            return 0;
-        };
-
-        while(match.size()){
-            vector<pair<int, int>> cur;
-            int m = match.size();
-            for(int i = 0; i < m; i++){
-                auto [u, v] = match[i];
-
-                if(check(u)){
-                    cover.erase(v);
-                }else if(check(v)){
-                    cover.erase(u);
-                }else{
-                    cur.push_back({u, v});
-                }
-            }
-            if((int) cur.size() == m){
-                cover.erase(cur.back().first);
-                cur.pop_back();
-            }
-            match = cur;
-        }
-        return cover;
-    }
 };
+
+void solve(int tc) {
+    
+}
+
+signed main() {
+    faster
+    int t = 1;
+    // cin >> t;
+    for (int tc = 1; tc <= t; tc++) {
+        solve(tc);
+    }
+    return 0;
+}

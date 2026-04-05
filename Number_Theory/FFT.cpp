@@ -1,43 +1,51 @@
-using CD = complex <double>;
-typedef long long LL;
+// passes O(3e7) in around 1 sec
+// for better precision use long double, sinl, cosl
+using CD = complex<double>; 
 const double PI = acos(-1.0L);
 
-int N;
-vector<int> perm;
-vector<CD> wp[2];
-void precalculate(int n) {
-  assert((n & (n - 1)) == 0), N = n;
-  perm = vector<int>(N, 0);
-  for (int k = 1; k < N; k <<= 1) {
-    for (int i = 0; i < k; i++) {
-      perm[i] <<= 1;
-      perm[i + k] = 1 + perm[i];
+void precalculate(int n, vector<int> &perm, vector<CD> wp[2]) {
+    assert((n & (n - 1)) == 0);  // n must be a power of 2
+    perm.assign(n, 0);
+    for (int k = 1; k < n; k <<= 1) {
+        for (int i = 0; i < k; i++) {
+            perm[i] <<= 1;
+            perm[i + k] = 1 + perm[i];
+        }
     }
-  }
-  wp[0] = wp[1] = vector<CD>(N);
-  for (int i = 0; i < N; i++) {
-    wp[0][i] = CD(cos(2 * PI * i / N), sin(2 * PI * i / N));
-    wp[1][i] = CD(cos(2 * PI * i / N), -sin(2 * PI * i / N));
-  }
+    wp[0].assign(n, CD());
+    wp[1].assign(n, CD());
+    for (int i = 0; i < n; i++) {
+        wp[0][i] = CD(cos(2 * PI * i / n), sin(2 * PI * i / n));
+        wp[1][i] = CD(cos(2 * PI * i / n), -sin(2 * PI * i / n));
+    }
 }
+
 void fft(vector<CD> &v, bool invert = false) {
-  if (v.size() != perm.size()) precalculate(v.size());
-  for (int i = 0; i < N; i++)
-    if (i < perm[i]) swap(v[i], v[perm[i]]);
-  for (int len = 2; len <= N; len *= 2) {
-    for (int i = 0, d = N / len; i < N; i += len) {
-      for (int j = 0, idx = 0; j < len / 2; j++, idx += d) {
-        CD x = v[i + j];
-        CD y = wp[invert][idx] * v[i + j + len / 2];
-        v[i + j] = x + y;
-        v[i + j + len / 2] = x - y;
-      }
+    int n = v.size();
+    static vector<int> perm;
+    static vector<CD> wp[2];
+
+    if ((int) perm.size() != n) precalculate(n, perm, wp);
+
+    for (int i = 0; i < n; i++)
+        if (i < perm[i]) swap(v[i], v[perm[i]]);
+
+    for (int len = 2; len <= n; len *= 2) {
+        for (int i = 0, d = n / len; i < n; i += len) {
+            for (int j = 0, idx = 0; j < len / 2; j++, idx += d) {
+                CD x = v[i + j];
+                CD y = wp[invert][idx] * v[i + j + len / 2];
+                v[i + j] = x + y;
+                v[i + j + len / 2] = x - y;
+            }
+        }
     }
-  }
-  if (invert) {
-    for (int i = 0; i < N; i++) v[i] /= N;
-  }
+
+    if (invert) {
+        for (int i = 0; i < n; i++) v[i] /= n;
+    }
 }
+
 void pairfft(vector<CD> &a, vector<CD> &b, bool invert = false) {
   int N = a.size();
   vector<CD> p(N);
@@ -56,7 +64,7 @@ void pairfft(vector<CD> &a, vector<CD> &b, bool invert = false) {
 }
 vector<LL> multiply(const vector<LL> &a, const vector<LL> &b) {
   int n = 1;
-  while (n < a.size() + b.size()) n <<= 1;
+  while (n < (int) a.size() + (int) b.size()) n <<= 1;
   vector<CD> fa(a.begin(), a.end()), fb(b.begin(), b.end());
   fa.resize(n);
   fb.resize(n);
@@ -65,16 +73,17 @@ vector<LL> multiply(const vector<LL> &a, const vector<LL> &b) {
   for (int i = 0; i < n; i++) fa[i] = fa[i] * fb[i];
   fft(fa, true);
   vector<LL> ans(n);
-  for (int i = 0; i < n; i++) ans[i] = round(fa[i].real());
-  return ans;
+    for (int i = 0; i < n; i++)
+        ans[i] = (LL) llround(fa[i].real());
+    return ans;
 }
-const int M = 1e9 + 7, B = sqrt(M) + 1;
+const LL M = 1e15 + 3, B = sqrt(M) + 1;
 vector<LL> anyMod(const vector<LL> &a, const vector<LL> &b) {
   int n = 1;
-  while (n < a.size() + b.size()) n <<= 1;
+  while (n < (int) a.size() + (int) b.size()) n <<= 1;
   vector<CD> al(n), ar(n), bl(n), br(n);
-  for (int i = 0; i < a.size(); i++) al[i] = a[i] % M / B, ar[i] = a[i] % M % B;
-  for (int i = 0; i < b.size(); i++) bl[i] = b[i] % M / B, br[i] = b[i] % M % B;
+  for (int i = 0; i < (int) a.size(); i++) al[i] = a[i] % M / B, ar[i] = a[i] % M % B;
+  for (int i = 0; i < (int) b.size(); i++) bl[i] = b[i] % M / B, br[i] = b[i] % M % B;
   pairfft(al, ar);
   pairfft(bl, br);
   //        fft(al); fft(ar); fft(bl); fft(br);
