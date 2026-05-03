@@ -13,101 +13,64 @@ using PLL = pair<LL, LL>;
 #define all(v) v.begin(), v.end()
 
 const LL mod = 998244353;
-const int N = 5e5 + 10;
+const int N = 5e2 + 10;
 const int inf = 1e9 + 10;
 const LL INF = 1e18;
 
-template<class T, class L, T it, L il, 
-         T(*mergeT)(T, T), 
-         T(*applyL)(T, L), 
-         L(*mergeL)(L, L)>
-struct SegTree{
-    int n;
-    vector<T> tree;
+vector<int> adj[N], comp[N];
+vector<int> order;
+int vis[N], id[N], in[N], tmr = 1;
 
-    bool (*compLe)(T, T);
-    bool (*compRi)(T, T);
-
-    SegTree() {}
-    SegTree(int n, bool (*compLe)(T, T), bool (*compRi)(T, T))
-        : n(n), compLe(compLe), compRi(compRi) {
-        tree.assign(2 * n, it);
+int dfs(int u){
+    // cout << u << '\n';
+    if(vis[u]) return id[u];
+    vis[u] = 2, id[u] = u, in[u] = tmr++;
+    for(auto v: adj[u]){
+        int x = dfs(v);
+        if(vis[x] == 2 and in[id[u]] > in[x]) id[u] = id[id[u]] = x;
     }
-
-    SegTree(vector<T> &v, bool (*compLe)(T, T), bool (*compRi)(T, T))
-        : n(v.size()), compLe(compLe), compRi(compRi) {
-        tree.assign(2 * n, it);
-        for(int i = 0; i < n; i++)
-            tree[i + n] = v[i];
-        for(int i = n - 1; i > 0; i--)
-            tree[i] = mergeT(tree[i << 1], tree[i << 1 | 1]);
-    }
-
-    // point update only
-    void update(int l, int r, L val){
-        // assume l == r
-        int i = l + n;
-        tree[i] = applyL(tree[i], val);
-        for(i >>= 1; i > 0; i >>= 1)
-            tree[i] = mergeT(tree[i << 1], tree[i << 1 | 1]);
-    }
-
-    T query(int l, int r){
-        l += n, r += n + 1;
-        T lft = it, ryt = it;
-        for(; l < r; l >>= 1, r >>= 1){
-            if(l & 1) lft = mergeT(lft, tree[l++]);
-            if(r & 1) ryt = mergeT(tree[--r], ryt);
-        }
-        return mergeT(lft, ryt);
-    }
-};
-
-struct node {
-    LL sumr[31];
-    int minr[31];
-    constexpr node() : sumr{}, minr{} {
-        for (int i = 0; i < 31; i++) {
-            minr[i] = inf;
-        }
-    }
-};
-node mergeT(node a, node b){
-    for(int i = 0; i <= 30; i++){
-        a.sumr[i] += b.sumr[i];
-        a.minr[i] = min(a.minr[i], b.minr[i]);
-    }
-    return a;
+    vis[u] = 1;
+    // cout << u << ' ' << id[u] << '\n';
+    comp[id[u]].push_back(u);
+    order.push_back(id[u]);
+    return id[u];
 }
-node applyL(node a, int x){
-    for(int i = 30; x < (1LL << i); i--){
-        a.sumr[i] = x;
-    }
-    a.minr[31 - __builtin_clz(x) + 1] = x;
-    return a;
-}
-int mergeL(int a, int b){
-    return 0;
+
+int upd(int u){
+    if(id[u] == u) return u;
+    id[u] = upd(id[u]);
+    comp[id[u]].push_back(u);
+    return id[u];
 }
 
 void solve (int tc) {
-    int n, q; cin >> n >> q;
-    constexpr node IT;
-    SegTree<node, int, IT, 0, mergeT, applyL, mergeL> seg(n, nullptr, nullptr);
+    int n, m; cin >> n >> m;
+    for(int i = 0; i < m; i++){
+        int u, v; cin >> u >> v;
+        adj[u].push_back(v);
+    }
     for(int i = 0; i < n; i++){
-        int u; cin >> u;
-        seg.update(i, i, u);
+        if(!vis[i]) dfs(i);
     }
-    while(q--){
-        int l, r; cin >> l >> r; l--, r--;
-        node ans = seg.query(l, r);
-        LL miss = 1;
-        for(int i = 1; i <= 30; i++){
-            if(miss >= (1LL << i) or ans.minr[i] <= miss) miss = ans.sumr[i] + 1;
-            else break;
-        }
-        cout << miss << '\n';
+    int k = 0;
+    for(int i = 0; i < n; i++){
+        upd(i);
+        if(id[i] == i) comp[i].push_back(i), k++;
     }
+
+    cout << k << '\n';
+    vector<int> vis(n + 1);
+    reverse(all(order));
+
+    // for(int i = 0; i < n; i++){
+    //     int id = order[i];
+    //     if(vis[id]) continue;
+    //     vis[id] = 1;
+    //     cout << comp[id].size() << ' ';
+    //     for(auto u: comp[id])
+    //         cout << u << ' ';
+    //     cout << '\n';
+    // }
 }
 
 signed main() {

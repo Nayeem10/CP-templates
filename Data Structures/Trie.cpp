@@ -1,6 +1,6 @@
 struct node{
-    int path, leaf;
     vector<int> child;
+    int path, leaf;
     node(int n = 0) : child(n, -1), path(0), leaf(0) {}
 };
 class Trie{

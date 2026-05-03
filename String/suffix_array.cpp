@@ -30,7 +30,7 @@ vector <int> suffixArray (const vector <int> &vec, int val_range) {
     if (SA[i] > 0 and !sl[SA[i]] and sl[SA[i] - 1]) new_lms_idx[k++] = SA[i];
   }
   int cur = 0; SA[n - 1] = 0;
-  for (int k = 1; k < new_lms_idx.size(); ++k) {
+  for (int k = 1; k < (int) new_lms_idx.size(); ++k) {
     int i = new_lms_idx[k - 1], j = new_lms_idx[k];
     if (vec[i] ^ vec[j]) {
       SA[j] = ++cur; continue;
@@ -46,10 +46,10 @@ vector <int> suffixArray (const vector <int> &vec, int val_range) {
     }
     SA[j] = flag ? ++cur : cur;
   }
-  for (int i = 0; i < lms_idx.size(); ++i) lms_vec[i] = SA[lms_idx[i]];
-  if (cur + 1 < lms_idx.size()) {
+  for (int i = 0; i < (int) lms_idx.size(); ++i) lms_vec[i] = SA[lms_idx[i]];
+  if (cur + 1 < (int) lms_idx.size()) {
     auto lms_SA = suffixArray(lms_vec, cur + 1);
-    for (int i = 0; i < lms_idx.size(); ++i) new_lms_idx[i] = lms_idx[lms_SA[i]];
+    for (int i = 0; i < (int) lms_idx.size(); ++i) new_lms_idx[i] = lms_idx[lms_SA[i]];
   }
   inducedSort(vec, val_range, SA, sl, new_lms_idx); return SA;
 }
