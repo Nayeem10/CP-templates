@@ -2,7 +2,6 @@ struct TwoSatSolver{
     int n_var;
     vector<vector<int>> adj, radj;
     vector<int> order, vis, comp, assignment;
-
     void dfs(int u){
         if(vis[u]) return;
         vis[u] = 1;
@@ -16,11 +15,9 @@ struct TwoSatSolver{
         for(auto v: radj[u])
             asgn(v, id);
     }
-
     TwoSatSolver(int n) : n_var(n + 1), adj(2 * n_var), radj(2 * n_var), vis(2 * n_var), comp(2 * n_var), assignment(n_var) {
         order.reserve(2 * n_var);
     }
-
     void add(int a, int nega, int b, int negb){
         a = 2 * a ^ nega, b = 2 * b ^ negb;
         adj[a ^ 1].push_back(b);

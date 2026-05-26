@@ -60,9 +60,8 @@ vector<pair<int, int>> generate_random_tree(int n) {
 
 
 int main() {
-    int n = 10, m = randomInt(n, n * 2);
-    cout << n << ' ' << m << '\n';
-    for(int i = 1; i <= m; i++){
-        cout << randomInt(0, n - 1) << ' ' << randomInt(0, n - 1) << '\n';
+    cout << "1\n3000\n";
+    for(int i = 1; i <= 3000; i++){
+        cout << "1 1\n";
     }
 }
