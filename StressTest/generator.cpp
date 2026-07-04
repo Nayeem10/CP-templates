@@ -57,11 +57,46 @@ vector<pair<int, int>> generate_random_tree(int n) {
 
     return edges;
 }
+#define all(v) v.begin(), v.end()
 
+vector<int> get(vector<int> a){
+    int n = a.size();
+    vector<int> lft(n), ryt(n);   
+    stack<int> st;
+    for(int i = 0; i < n; i++){
+        while(st.size() and a[st.top()] > a[i]) st.pop();
+        if(st.size()) lft[i] = i - st.top();
+        else lft[i] = i + 1;
+        st.push(i);
+    }
+    
+    while(st.size()) st.pop();
+
+    for(int i = n - 1; i >= 0; i--){
+        while(st.size() and a[st.top()] > a[i]) st.pop();
+        if(st.size()) ryt[i] = st.top() - i;
+        else ryt[i] = n - i;
+        st.push(i);
+    }
+    vector<int> ret(n);
+    for(int i = 0; i < n; i++)
+        ret[i] = lft[i] * ryt[i];
+    return ret;
+}
 
 int main() {
-    cout << "1\n3000\n";
-    for(int i = 1; i <= 3000; i++){
-        cout << "1 1\n";
+    int n = randomInt(3, 6);
+    vector<int> a(n), b(n);
+    iota(all(a), 1), iota(all(b), 1);
+    shuffle(all(a), rng), shuffle(all(b), rng);
+    cout << n << '\n';
+    for(auto u: a)
+        cout << u << ' ';
+    cout << '\n';
+    for(auto u: b){
+        if(randomInt(1, 100) < 80)
+            cout << -1 << ' ';
+        else cout << u << ' ';
     }
+    cout << '\n';
 }

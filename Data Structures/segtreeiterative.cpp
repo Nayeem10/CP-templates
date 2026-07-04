@@ -38,6 +38,7 @@ struct SegTree{
     }
  
     T query(int l, int r){
+        if(l > r) return it;
         l += n, r += n + 1;
         pushDown(l), pushDown(r - 1);
         T lft = it, ryt = it;
