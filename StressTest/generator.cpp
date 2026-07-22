@@ -85,18 +85,9 @@ vector<int> get(vector<int> a){
 }
 
 int main() {
-    int n = randomInt(3, 6);
-    vector<int> a(n), b(n);
-    iota(all(a), 1), iota(all(b), 1);
-    shuffle(all(a), rng), shuffle(all(b), rng);
+    int n = 10000;
     cout << n << '\n';
-    for(auto u: a)
-        cout << u << ' ';
-    cout << '\n';
-    for(auto u: b){
-        if(randomInt(1, 100) < 80)
-            cout << -1 << ' ';
-        else cout << u << ' ';
-    }
+    for(int i = 1; i <= n; i++)
+        cout << i << ' ';
     cout << '\n';
 }
