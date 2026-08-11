@@ -1,8 +1,6 @@
 const LL N = 1 << 18;
 const LL MOD = 786433;
 
-vector<LL> P[N];
-LL rev[N], w[N | 1], a[N], b[N], inv_n, g;
 LL Pow(LL b, LL p) {
   LL ret = 1;
   while (p) {
@@ -23,12 +21,14 @@ LL primitive_root(LL p) {
   if (n > 1) factor.emplace_back(n);
   for (LL res = 2; res <= p; res++) {
     bool ok = true;
-    for (LL i = 0; i < factor.size() && ok; i++)
+    for (LL i = 0; i < (int) factor.size() && ok; i++)
       ok &= Pow(res, phi / factor[i]) != 1;
     if (ok) return res;
   }
   return -1;
 }
+vector<LL> P[N];
+LL rev[N], w[N | 1], a[N], b[N], inv_n, g = primitive_root(MOD);
 void prepare(LL n) {
   LL sz = abs(31 - __builtin_clz(n));
   LL r = Pow(g, (MOD - 1) / n);

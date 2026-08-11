@@ -83,11 +83,13 @@ vector<int> get(vector<int> a){
         ret[i] = lft[i] * ryt[i];
     return ret;
 }
-
+#define all(v) v.begin(), v.end()
 int main() {
-    int n = 10000;
+    int n = randomInt(1, 10);
     cout << n << '\n';
-    for(int i = 1; i <= n; i++)
-        cout << i << ' ';
+    for(int i = 1; i <= n; i++){
+        if(randomInt(0, 3) == 1) cout << 1 << ' ';
+        else cout << randomInt(1, n) << ' ';
+    }
     cout << '\n';
 }

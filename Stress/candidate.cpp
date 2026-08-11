@@ -17,22 +17,20 @@ const int N = 1e6 + 10;
 const int inf = 1e9 + 10;
 const LL INF = 1e18 + 10;
 
+void pre() {
+    
+}
+
 void solve (int tc) {
-    int n; cin >> n; 
-    string s; cin >> s;
-    int pref[3] = {}; pref[0] = 1;
-    LL ans = 1LL * n * (n + 1) / 2;
-    for(int i = 0, j = 0, sum = 0; i < n; i++){
-        if(i and s[i] == s[i - 1]) j = i;
-        sum = (3 + sum + (s[i] == '1' ? 1 : -1)) % 3;
-        ans -= ((i - j) / 2 + pref[sum]);
-        pref[sum]++;
+    LL n, m; cin >> n >> m;
+    for(LL k = 1; k <= m; k++){
+        LL first = k * (k - 1) / 2 * 
     }
-    cout << ans << '\n';
 }
 
 signed main() {
     faster
+    pre();
     int t = 1;
     cin >> t;
     for (int tc = 1; tc <= t; tc++) {
@@ -40,3 +38,10 @@ signed main() {
     }
     return signed{};
 }
+
+/*
+ 
+ * WRITE STUFFS DOWN
+ * DON'T GET STUCK ON ONE APPROACH
+ 
+*/

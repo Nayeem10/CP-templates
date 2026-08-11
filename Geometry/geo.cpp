@@ -43,6 +43,34 @@ Point rotatecw90(Point a) { return Point(a.y, -a.x); }
 Point rotateccw(Point a, double t) { return Point(a.x * cos(t) - a.y * sin(t), a.x * sin(t) + a.y * cos(t)); }
 Point rotatecw(Point a, double t) { return Point(a.x * cos(t) + a.y * sin(t), -a.x * sin(t) + a.y * cos(t)); }
 
+bool is_point_in_segment(Point a, Point b, Point p) {
+    return cross(a, b, p) == 0 &&
+           p.x >= min(a.x, b.x) && p.x <= max(a.x, b.x) &&
+           p.y >= min(a.y, b.y) && p.y <= max(a.y, b.y);
+}
+
+// 0 -> no intersection, 1 -> unique intersection, 2 -> infinite intersection
+int seg_seg_intersection(Point a, Point b, Point c, Point d) {
+    TI oa = cross(c, d, a);
+    TI ob = cross(c, d, b);
+    TI oc = cross(a, b, c);
+    TI od = cross(a, b, d);
+
+    if (sign(oa) == 0 && sign(ob) == 0 && sign(oc) == 0 && sign(od) == 0) {
+        if (b < a) swap(a, b);
+        if (d < c) swap(c, d);
+        Point L = max(a, c);
+        Point R = min(b, d);
+
+        if (R < L) return 0;
+        if (L == R) return 1;
+        return 2;
+    }
+    
+    if (sign(oa) * sign(ob) <= 0 && sign(oc) * sign(od) <= 0) return 1;
+    return 0;
+}
+
 // intersection point between ab and cd assuming unique intersection exists
 bool line_line_intersection(Point a, Point b, Point c, Point d, Point &ans) {
     double a1 = a.y - b.y, b1 = b.x - a.x, c1 = cross(a, b);
@@ -51,12 +79,6 @@ bool line_line_intersection(Point a, Point b, Point c, Point d, Point &ans) {
     if (det == 0) return 0;
     ans = Point((b1 * c2 - b2 * c1) / det, (c1 * a2 - a1 * c2) / det);
     return 1;
-}
-
-bool is_point_in_segment(Point a, Point b, Point p) {
-    return cross(a, b, p) == 0 &&
-           p.x >= min(a.x, b.x) && p.x <= max(a.x, b.x) &&
-           p.y >= min(a.y, b.y) && p.y <= max(a.y, b.y);
 }
 
 // -1 --> outside, 0 --> boundary, 1 --> inside
@@ -74,47 +96,6 @@ int is_point_in_polygon(vector<Point> &pol, Point z) {
 
 double rat(Point a, Point b, Point p) {
     return !sign(a.x - b.x) ? (p.y - a.y) / (b.y - a.y) : (p.x - a.x) / (b.x - a.x);
-}
-
-double polygon_union(vector<vector<Point>> &p) {
-    int n = p.size();
-    double ans = 0;
-    for(int i = 0; i < n; ++i) {
-        for(int v = 0; v < (int)p[i].size(); ++v) {
-            Point a = p[i][v], b = p[i][(v + 1) % p[i].size()];
-            vector<pair<double, int>> segs;
-            segs.emplace_back(0, 0), segs.emplace_back(1, 0);
-            for(int j = 0; j < n; ++j) {
-                if(i != j) {
-                    for(size_t u = 0; u < p[j].size(); ++u) {
-                        Point c = p[j][u], d = p[j][(u + 1) % p[j].size()];
-                        int sc = sign(cross(b - a, c - a)), sd = sign(cross(b - a, d - a));
-                        if(!sc && !sd) {
-                            if(sign(dot(b - a, d - c)) > 0 && i > j) {
-                                segs.emplace_back(rat(a, b, c), 1);
-                                segs.emplace_back(rat(a, b, d), -1);
-                            }
-                        } else {
-                            double sa = cross(d - c, a - c), sb = cross(d - c, b - c);
-                            if(sc >= 0 && sd < 0) segs.emplace_back(sa / (sa - sb), 1);
-                            else if(sc < 0 && sd >= 0) segs.emplace_back(sa / (sa - sb), -1);
-                        }
-                    }
-                }
-            }
-            sort(segs.begin(), segs.end());
-            double pre = min(max(segs[0].first, 0.0), 1.0), now, sum = 0;
-            int cnt = segs[0].second;
-            for(int j = 1; j < (int)segs.size(); ++j) {
-                now = min(max(segs[j].first, 0.0), 1.0);
-                if(!cnt) sum += now - pre;
-                cnt += segs[j].second;
-                pre = now;
-            }
-            ans += cross(a, b) * sum;
-        }
-    }
-    return ans * 0.5;
 }
 
 struct Circle {
