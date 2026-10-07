@@ -33,12 +33,25 @@ public:
         tree[cur].path--;
         tree[cur].leaf--;
     }
-    bool find(string &s){
-        int cur = 0;
+    int find(string &s, int k){
+        int cur = 0, ret = 0, b = 29;
         for(auto u: s){
-            cur = tree[cur].child[u - '0'];
-            if(cur == -1 || !tree[cur].path) return 0;
+            int l = tree[cur].child[u - '0'];
+            int r = tree[cur].child[(u - '0') ^ 1];
+
+            int cnt = 0;
+            if(cur != -1) cnt = tree[l].path;
+
+            if(cnt >= k){
+                if(l == -1) return inf;
+                cur = l;
+            }else{
+                if(r == -1) return inf;
+                k -= cnt, cur = r;
+                ans |= (1 << b);
+            }
+            b--;
         }
-        return tree[cur].leaf > 0;
+        return ret;
     }
 };

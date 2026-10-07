@@ -1,3 +1,16 @@
+// -1 --> outside, 0 --> boundary, 1 --> inside
+int is_point_in_polygon(vector<Point> &pol, Point z) {
+    int n = pol.size(), winding = 0;
+    for(int i = 0; i < n; i++) {
+        Point p1 = pol[i], p2 = pol[(i + 1) % n];
+        if(is_point_in_segment(p1, p2, z)) return 0;
+        int ori = sign(cross(p1, p2, z));
+        if(p1.y <= z.y && p2.y > z.y && ori > 0) winding++;
+        if(p1.y > z.y && p2.y <= z.y && ori < 0) winding--;
+    }
+    return winding != 0 ? 1 : -1;
+}
+
 double polygon_union(vector<vector<Point>> &p) {
     int n = p.size();
     double ans = 0;
