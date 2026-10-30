@@ -1,92 +1,49 @@
-struct Line {
-  double m, c;
-  double eval(double x) { return m * x + c; }
+template<typename T = LL>
+struct LiChao {
+    struct Line {
+        T m, c;
+        T eval(LL x) const { return (T) m * x + c; }
+    };
+    struct Node { Line ln; int lc = 0, rc = 0; };
+
+    LL L, R;
+    T it;
+    int sz = 0, root = 0;
+    vector<Node> t;
+
+    // Use lowest() instead of min() so it correctly defaults to -INF for both ints and doubles
+    LiChao(LL L, LL R, int q, T inf_val = numeric_limits<T>::lowest() / 2)
+        : L(L), R(R), it(inf_val) {
+        int depth = 64 - __builtin_clzll(max(1LL, R - L + 1));
+        t.resize(q * 4 * depth + 5);
+    }
+
+    void add(int &u, LL l, LL r, LL ql, LL qr, Line nw) {
+        if (!u) { u = ++sz; t[u].ln = {0, it}; }
+        LL m = l + (r - l) / 2;
+        if (ql <= l && r <= qr) {
+            bool lef = nw.eval(l) > t[u].ln.eval(l);
+            bool mid = nw.eval(m) > t[u].ln.eval(m);
+            if (mid) swap(t[u].ln, nw);
+            if (l == r || nw.c <= it) return; // Prune unallocated dummy -INF line
+            if (lef != mid) add(t[u].lc, l, m, ql, qr, nw);
+            else            add(t[u].rc, m + 1, r, ql, qr, nw);
+            return;
+        }
+        if (ql <= m) add(t[u].lc, l, m, ql, qr, nw);
+        if (qr > m)  add(t[u].rc, m + 1, r, ql, qr, nw);
+    }
+
+    T merge(T a, T b) const { return max(a, b); }
+
+    T query(int u, LL l, LL r, LL x) {
+        if (!u) return it;
+        T ans = t[u].ln.eval(x);
+        if (l == r) return ans;
+        LL m = l + (r - l) / 2;
+        return merge(ans, x <= m ? query(t[u].lc, l, m, x) : query(t[u].rc, m + 1, r, x));
+    }
+
+    void add_segment(Line nw, LL l, LL r) { add(root, L, R, l, r, nw); }
+    T query(LL x) { return query(root, L, R, x); }
 };
-struct node {
-  Line line;
-  node* left = nullptr;
-  node* right = nullptr;
-  node(Line line) : line(line) {}
-  void add_segment(Line nw, LL l, LL r, LL L, LL R) {
-    if (l > r || r < L || l > R) return;
-    LL m = (l + 1 == r ? l : (l + r) / 2);
-    if (l >= L and r <= R) {
-      bool lef = nw.eval(l) < line.eval(l);
-      bool mid = nw.eval(m) < line.eval(m);
-      if (mid) swap(line, nw);
-      if (l == r) return;
-      if (lef != mid) {
-        if (left == nullptr)
-          left = new node(nw);
-        else
-          left->add_segment(nw, l, m, L, R);
-      } else {
-        if (right == nullptr)
-          right = new node(nw);
-        else
-          right->add_segment(nw, m + 1, r, L, R);
-      }
-      return;
-    }
-    if (max(l, L) <= min(m, R)) {
-      if (left == nullptr) left = new node({0, inf});
-      left->add_segment(nw, l, m, L, R);
-    }
-    if (max(m + 1, L) <= min(r, R)) {
-      if (right == nullptr) right = new node({0, inf});
-      right->add_segment(nw, m + 1, r, L, R);
-    }
-  }
-  double query_segment(LL x, LL l, LL r, LL L, LL R) {
-    if (l > r || r < L || l > R) return inf;
-
-    double ans = line.eval(x);
-    if (l == r) return ans;
-
-    LL m = (l + r) >> 1;
-
-    if (x <= m && left) ans = min(ans, left->query_segment(x, l, m, L, R));
-    if (x > m && right) ans = min(ans, right->query_segment(x, m + 1, r, L, R));
-
-    return ans;
-  }
-};
-struct LiChaoTree {
-  LL L, R;
-  node* root;
-  LiChaoTree(LL L, LL R) : L(L), R(R) { root = new node({0, inf}); }
-  void add_segment(Line line, LL l, LL r) {
-    root->add_segment(line, L, R, l, r);
-  }
-  double query(LL x) { return root->query_segment(x, L, R, L, R); }
-};
-
-void solve(int tc) {
-  int n;
-  cin >> n;
-  LiChaoTree tree(-INF, INF);
-  for (int i = 0; i < n; i++) {
-    LL x, v;
-    cin >> x >> v;
-    double m = -1.0 / v, c = 1.0 * x / v;
-    tree.add_segment({m, c}, -INF, x);
-    tree.add_segment({-m, -c}, x, INF);
-  }
-  int q;
-  cin >> q;
-  while (q--) {
-    char t;
-    cin >> t;
-    if (t == '+') {
-      LL x, v;
-      cin >> x >> v;
-      double m = -1.0 / v, c = 1.0 * x / v;
-      tree.add_segment({m, c}, -INF, x);
-      tree.add_segment({-m, -c}, x, INF);
-    } else {
-      LL x;
-      cin >> x;
-      cout << fixed << setprecision(9) << tree.query(x) << '\n';
-    }
-  }
-}

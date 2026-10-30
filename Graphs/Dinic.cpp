@@ -6,12 +6,13 @@ struct Dinic{
     int n, s, t;
     vector<vector<edge>> g;
     vector<int> level, ptr;
-    Dinic(int _n) : n(_n + 5){
+    Dinic(int _n) : n(_n + 1){
         g.resize(n);
     }
-    void addEdge(int u, int v, LL cap){
+
+    void addEdge(int u, int v, LL cap, bool directed){
         g[u].push_back({v, (int) g[v].size(), 0, cap, 0LL});
-        g[v].push_back({u, (int) g[u].size() - 1, 1, 0LL, 0LL});
+        g[v].push_back({u, (int) g[u].size() - 1, directed, directed ? 0LL : cap, 0LL});
     }
     bool bfs(){
         level.assign(n, -1);
@@ -41,7 +42,14 @@ struct Dinic{
         }
         return 0;
     }
+    void reset(){
+        for(int u = 0; u < n; u++){
+            for(auto &e: g[u])
+                e.flow = 0;
+        }
+    }
     LL maxFlow(int s, int t){
+        reset();
         this->s = s, this->t = t;
         LL flow = 0;
         while(bfs()){
@@ -49,5 +57,22 @@ struct Dinic{
             while(LL cflow = dfs(s, INF)) flow += cflow;
         }
         return flow;
+    }
+    // Returns partition containing source
+    vector<int> minCut(int s, int t){
+        maxFlow(s, t);
+        vector<int> vis(n), ret;
+        queue<int> q; 
+        q.push(s); vis[s] = 1;
+        while(q.size()){
+            auto u = q.front(); q.pop();
+            ret.push_back(u);
+            for(auto &e: g[u]){
+                if(e.cap == e.flow or vis[e.to]) continue;
+                vis[e.to] = 1;
+                q.push(e.to);
+            }
+        }
+        return ret;
     }
 };
