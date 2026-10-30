@@ -1,0 +1,147 @@
+\begin{multicols*}{3}
+\newpage
+\section{Equations and Formulas}
+
+\subsection{Core Binomial Identities}
+\textbf{Hockey Stick Identity : } $\displaystyle \sum_{k=r}^{n}{k \choose r}={n+1 \choose r+1}$ \\
+\textbf{Vandermonde Identity : } $\displaystyle \sum_{k=0}^{r}{n \choose k}{m \choose r-k}={n+m \choose r}$ \\
+\textbf{General Convolution : } $\displaystyle \sum_{k}{r \choose k}{s \choose n-k}={r+s \choose n}$ \\
+\textbf{Absorption Identity : } $\displaystyle k{n \choose k}=n{n-1 \choose k-1}$ \\
+\textbf{Alternating Sum : } $\displaystyle \sum_{k=0}^{r}(-1)^{k}{n \choose k}=(-1)^{r}{n-1 \choose r}$ \\
+\textbf{Binomial Square Identity : } $\displaystyle \sum_{k=0}^{n}{n \choose k}^{2}={2n \choose n}$ \\
+\textbf{Weighted Binomial Sums : } $\displaystyle \sum_{k=0}^{n}k{n \choose k}=n2^{n-1}$, $\displaystyle \sum_{k=0}^{n}k^{2}{n \choose k}=n(n+1)2^{n-2}$ \\
+
+\subsection{Stars and Bars}
+Number of non-negative solutions to $\displaystyle x_{1}+x_{2}+\cdots+x_{k}=n$ is $\displaystyle {n+k-1 \choose k-1}$ \\
+With $\displaystyle x_{i}\ge1$, it is $\displaystyle {n-1 \choose k-1}$ \\
+
+\subsection{Catalan Numbers}
+$\displaystyle C_n=\frac{1}{n+1}{2n \choose n}$
+$\displaystyle C_0=1,C_1=1\text{ and }C_n=\sum \limits_{k=0}^{n-1}C_k C_{n-1-k}$ \\
+The number of ways to completely parenthesize $n$+$\displaystyle 1$ factors. \\
+The number of triangulations of a convex polygon with $n$+$\displaystyle 2$ sides (i.e. the number of partitions of polygon into disjoint triangles by using the diagonals). \\
+The number of ways to connect the $\displaystyle 2n$ points on a circle to form $n$ disjoint i.e. non-intersecting chords. \\
+The number of rooted full binary trees with $n$+$\displaystyle 1$ leaves (vertices are not numbered). A rooted binary tree is full if every vertex has either two children or no children. \\
+Number of permutations of $\displaystyle {1, …, n}$ that avoid the pattern $\displaystyle 123$ (or any of the other patterns of length $3$); that is, the number of permutations with no three-term increasing sub-sequence. For $n = 3$, these permutations are $\displaystyle 132,\ 213,\ 231,\ 312$ and $321.$
+
+\subsection{Stirling Numbers First Kind}
+The Stirling numbers of the first kind count permutations according to their number of cycles (counting fixed points as cycles of length one). \\
+$S(n,k)$ counts the number of permutations of $n$ elements with $\displaystyle \displaystyle k$ disjoint cycles. \\
+$S(n,k)=(n-1) \cdot S(n-1,k)+S(n-1,k-1),$ \(where,\; S(0,0)=1,S(n,0)=S(0,n)=0\)
+$\displaystyle \displaystyle\sum_{k=0}^{n}S(n,k) = n!$ \\
+The unsigned Stirling numbers may also be defined algebraically, as the coefficient of the rising factorial:
+\[\displaystyle x^{\bar{n}} = x(x+1)...(x+n-1) = \sum_{k=0}^{n}{ S(n, k) x^k}\]
+Lets $[n, k]$ be the stirling number of the first kind, then
+
+\[\displaystyle \bigl[\!\begin{smallmatrix} n \\ n\ -\ k \end{smallmatrix}\!\bigr] = \sum_{0 \leq i_1 < i_2 < i_k < n}{i_1i_2....i_k.}\]
+
+\subsection{Stirling Numbers Second Kind}
+Stirling number of the second kind is the number of ways to partition a set of n objects into k non-empty subsets. \\
+$S(n,k)=k \cdot S(n-1,k)+S(n-1,k-1)$, \(where \; S(0,0)=1,S(n,0)=S(0,n)=0\)
+$S(n,2)=2^{n-1}-1$ 
+$S(n,k) \cdot k!$ = number of ways to color $n$ nodes using colors from $\displaystyle 1$ to $\displaystyle \displaystyle k$ such that each color is used at least once. \\
+An $r$-associated Stirling number of the second kind is the number of ways to partition a set of $n$ objects into $\displaystyle \displaystyle k$ subsets, with each subset containing at least $r$ elements. It is denoted by $S_r( n , k )$ and obeys the recurrence relation. $\displaystyle \displaystyle S_r(n+1,k) = k S_r(n,k) + {n \choose r-1} S_r(n-r+1,k-1)$ \\ 
+Used in partition DP. $\displaystyle S(n,k)=\frac{1}{k!}\sum_{i=0}^{k}(-1)^{i}{k \choose i}(k-i)^{n}$ \\
+Denote the n objects to partition by the integers $\displaystyle 1, 2, …., n$. Define the reduced Stirling numbers of the second kind, denoted $S^d(n, k)$, to be the number of ways to partition the integers $\displaystyle 1, 2, …., n$ into k nonempty subsets such that all elements in each subset have pairwise distance at least d. That is, for any integers i and j in a given subset, it is required that $|i - j| \geq d$. It has been shown that these numbers satisfy, \(S^d(n, k) = S(n - d + 1, k - d + 1), n \geq k \geq d\)
+
+\subsection{Other Combinatorial Identities}
+$\displaystyle \displaystyle {n \choose k}=\frac{n}{k}{n-1 \choose k-1}$ \\
+$\displaystyle \sum \limits_{i= 0}^k{n+i \choose i}= \sum \limits_{i= 0}^k{n+i \choose n} = {n+k+1 \choose k}$ \\
+$\displaystyle \ n,r \in N, n > r, \sum \limits_{i=r}^n{i \choose r}={n+1 \choose r+1}$ \\
+If $\displaystyle P(n)=\sum_{k=0}^{n}{n \choose k} \cdot Q(k)$, then,
+\[Q(n)=\sum_{k=0}^{n}(-1)^{n-k}{n \choose k} \cdot P(k)\] \\
+If $\displaystyle P(n)=\sum_{k=0}^{n}(-1)^{k}{n \choose k} \cdot Q(k)$ , then,
+\[Q(n)=\sum_{k=0}^{n}(-1)^{k}{n \choose k} \cdot P(k)\]
+\textbf{Inclusion-Exclusion Template :} Number of valid configurations: $\displaystyle \sum_{k=0}^{n}(-1)^{k}{n \choose k}F(k)$ \\
+\textbf{Advanced Summation Identity :} $\displaystyle \sum_{k=r}^{n}{k \choose r}{n-k \choose m}={n+1 \choose r+m+1}$ \\
+\textbf{Useful Summation Transform :} $\displaystyle \sum_{k=0}^{n}{n \choose k}x^{k}y^{n-k}=(x+y)^{n}$ \\
+\textbf{Subset Convolution Identity :} $\displaystyle \sum_{k=0}^{n}{n \choose k}a^{k}b^{n-k}=(a+b)^{n}$ \\
+
+\subsection{Prime Mod Tricks}
+\textbf{Fermat Inverse : } For prime $p$: $\displaystyle a^{-1}\equiv a^{p-2} \pmod p$ \\
+\textbf{Lucas Theorem : } $\displaystyle {n \choose r} \equiv \prod {n_i \choose r_i} \pmod p$, where $n_i$, $r_i$ are base-$p$ digits. \\
+
+\subsection{Generating Functions}
+\textbf{Binomial Theorem : } $\displaystyle (1+x)^{n}=\sum_{k=0}^{n}{n \choose k}x^{k}$ \\
+\textbf{Derivative Trick : } $\displaystyle \sum k{n \choose k}x^{k}=nx(1+x)^{n-1}$ \\
+\textbf{Exponential Generating Functions : } Useful in counting labeled structures. $\displaystyle \sum_{n=0}^{\infty}\frac{x^{n}}{n!}=e^{x}$ \\
+
+\subsection{Tree DP Combinatorics}
+When merging subtree sizes: $\displaystyle {a+b \choose a}=\frac{(a+b)!}{a!b!}$ \\
+Used for counting ways to interleave children orders. \\
+
+\subsection{Different Math Formulas}
+\textbf{Picks Theorem : } $ A = i + b / 2 - 1 $ \\ 
+\textbf{Derangements : } $ d(i) = (i - 1) \times \left( d(i - 1) + d(i - 2) \right) $ \\ 
+\textbf{Derangements (Explicit) : } $\displaystyle D_{n}=n!\sum_{k=0}^{n}\frac{(-1)^{k}}{k!}$ \\
+\begin{multline*}
+\displaystyle \frac{n}{ab}-\Big\{\frac{b{\prime} n}{a}\Big\}-\Big\{\frac{a{\prime} n}{b}\Big\} + 1
+\end{multline*}
+
+\subsection{GCD and LCM}
+if $m$ is any integer, then $\displaystyle \gcd(a + m {\cdot} b, b) = \gcd(a, b)$ \\
+The gcd is a multiplicative function in the following sense: if $\displaystyle a_1$ and $\displaystyle a_2$ are relatively prime, then $\displaystyle \gcd(a_1 \cdot a_2, b) = \gcd(a_1, b) \cdot \gcd(a_2,b )$. \\
+$\displaystyle \gcd(a, \operatorname{lcm}(b, c)) = \operatorname{lcm}(\gcd(a, b), \gcd(a, c))$. \\
+$\displaystyle \operatorname{lcm}(a, \gcd(b, c)) = \gcd(\operatorname{lcm}(a, b), \operatorname{lcm}(a, c))$. \\
+For non-negative integers $\displaystyle a$ and $b$, where $\displaystyle a$ and $b$ are not both zero, $\displaystyle \gcd({n^a} - 1, {n^b} - 1) = n^{\gcd(a,b)} - 1$ \\
+$\displaystyle \gcd(a, b) = \displaystyle \sum_{k|a \, \text{and} \, k|b} {\phi(k)}$ \\
+$\displaystyle \displaystyle \sum_{i=1}^n [\gcd(i, n) = k] = { \phi{\left(\frac{n}{k}\right)}}$ \\
+$\displaystyle \displaystyle \sum_{k=1}^n \gcd(k, n) = \displaystyle \sum_{d|n} d \cdot {\phi{\left(\frac{n}{d}\right)}}$ \\
+$\displaystyle \displaystyle \sum_{k=1}^n x^{\gcd(k,n)} = \displaystyle \sum_{d|n} x^d \cdot {\phi{\left(\frac{n}{d}\right)}}$ \\
+$\displaystyle \displaystyle \sum_{k=1}^n \frac{1}{\gcd(k, n)} = \displaystyle \sum_{d|n} \frac{1}{d} \cdot {\phi{\left(\frac{n}{d}\right)}} = \frac{1}{n} \displaystyle \sum_{d|n} d \cdot \phi(d)$ \\
+$\displaystyle \displaystyle \sum_{k=1}^n \frac{k}{\gcd(k, n)} = \frac{n}{2} \cdot \displaystyle \sum_{d|n} \frac{1}{d} \cdot {\phi{\left(\frac{n}{d}\right)}} = \frac{n}{2} \cdot \frac{1}{n} \cdot \displaystyle \sum_{d|n} d \cdot \phi(d)$ \\
+$\displaystyle \displaystyle \sum_{k=1}^n \frac{n}{\gcd(k, n)} = 2 * \displaystyle \sum_{k=1}^n \frac{k}{\gcd(k, n)} - 1$, for $n > 1$ \\
+$\displaystyle \displaystyle \sum_{i=1}^n \sum_{j=1}^n [\gcd(i, j) = 1] = \displaystyle \sum_{d=1}^n \mu(d) \lfloor {\frac{n}{d} \rfloor}^2$ \\
+$\displaystyle \displaystyle \sum_{i=1}^n \displaystyle\sum_{j=1}^n \gcd(i, j) = \displaystyle \sum_{d=1}^n \phi(d) \lfloor {\frac{n}{d} \rfloor}^2$ \\
+$\displaystyle \sum_{i=1}^n \sum_{j=1}^n i \cdot j[\gcd(i, j) = 1] = \sum_{i=1}^n \phi(i)i^2$ \\
+$\displaystyle F(n) = \displaystyle \sum_{i=1}^n \displaystyle \sum_{j=1}^n \operatorname{lcm}(i, j) = \displaystyle \sum_{l=1}^n {\left(\frac{\left( 1 + \lfloor{\frac{n}{l} \rfloor} \right) \left( \lfloor{\frac{n}{l} \rfloor} \right)} {2} \right)}^2 \displaystyle \sum_{d|l} \mu(d)ld$ \\
+
+\subsection{Common Optimization Patterns}
+\begin{itemize}
+    \item Convert double binomial sum $\rightarrow$ Vandermonde.
+    \item Convert $\displaystyle k{n \choose k} \rightarrow$ Absorption identity.
+    \item Convert alternating prefix $\rightarrow$ closed binomial.
+    \item Use binomial inversion to undo convolution.
+    \item Use Lucas when $n$ is large.
+    \item Use generating function derivative for weighted sums.
+\end{itemize}
+\section{Competition Checklist}
+% \begin{multicols}{2}
+\subsection{Avoiding WA}
+\begin{enumerate}
+    \item Clear all global arrays.
+    \item Check \texttt{<=, >=, <, >} operators.
+    \item Verify input reading; check for premature \texttt{break} or \texttt{return}.
+    \item Check for division by zero.
+    \item Verify array, vector, and container sizes.
+    \item Check for infinite loops in \texttt{while} structures.
+    \item Ensure DP states are being saved.
+    \item Check for use-after-delete errors.
+    \item Re-read the problem to ensure correct understanding.
+    \item Review all problem constraints.
+    \item Test small cases: $0, 1$, etc.
+    \item Check for integer overflow (\texttt{long long}).
+    \item Initialize all variables properly.
+    \item Verify correct application of formulas.
+\end{enumerate}
+
+\subsection{Stress Testing}
+\begin{enumerate}
+    \item Verify the stress test script is functioning.
+    \item Test against multiple cases.
+    \item Test with both large and very small inputs.
+    \item Verify the correctness of the brute force code.
+\end{enumerate}
+
+\subsection{Idea Generation}
+\begin{enumerate}
+    \item Try thinking in reverse.
+    \item Re-read the problem and constraints.
+    \item Expand from small manual cases in notebook.
+    \item Identify invariants.
+    \item Consider simpler/greedy ideas.
+    \item Analyze brute force for optimization patterns.
+    \item Take a deep breath or a short break.
+\end{enumerate}
+% \end{multicols}
+\end{multicols*}
